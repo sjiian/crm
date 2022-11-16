@@ -120,13 +120,14 @@ func (svc *apigwRoute) Update(ctx context.Context, upd *types.ApigwRoute) (q *ty
 		// 	return ApigwRouteErrExistsEndpoint(qProps)
 		// }
 
-		qq.UpdatedAt = now()
-		qq.UpdatedBy = a.GetIdentityFromContext(ctx).Identity()
+		upd.UpdatedAt = now()
+		upd.CreatedAt = qq.CreatedAt
+		upd.DeletedAt = qq.DeletedAt
+		upd.UpdatedBy = a.GetIdentityFromContext(ctx).Identity()
 
-		if err = store.UpdateApigwRoute(ctx, svc.store, qq); err != nil {
+		if err = store.UpdateApigwRoute(ctx, svc.store, upd); err != nil {
 			return
 		}
-
 		ags := apigw.Service()
 
 		// If method or endpoint doesn't match then attach 404 handler
@@ -144,7 +145,7 @@ func (svc *apigwRoute) Update(ctx context.Context, upd *types.ApigwRoute) (q *ty
 		return nil
 	}()
 
-	return qq, svc.recordAction(ctx, qProps, ApigwRouteActionUpdate, err)
+	return upd, svc.recordAction(ctx, qProps, ApigwRouteActionUpdate, err)
 }
 
 func (svc *apigwRoute) DeleteByID(ctx context.Context, ID uint64) (err error) {
