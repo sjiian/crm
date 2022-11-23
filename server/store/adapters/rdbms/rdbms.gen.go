@@ -117,8 +117,29 @@ func (s *Store) UpsertActionlog(ctx context.Context, rr ...*actionlogType.Action
 			return
 		}
 
-		if err = s.Exec(ctx, actionlogUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, actionlogUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, actionlogInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, actionlogUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -426,8 +447,29 @@ func (s *Store) UpsertApigwFilter(ctx context.Context, rr ...*systemType.ApigwFi
 			return
 		}
 
-		if err = s.Exec(ctx, apigwFilterUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, apigwFilterUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, apigwFilterInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, apigwFilterUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -1001,8 +1043,29 @@ func (s *Store) UpsertApigwRoute(ctx context.Context, rr ...*systemType.ApigwRou
 			return
 		}
 
-		if err = s.Exec(ctx, apigwRouteUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, apigwRouteUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, apigwRouteInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, apigwRouteUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -1580,8 +1643,29 @@ func (s *Store) UpsertApplication(ctx context.Context, rr ...*systemType.Applica
 			return
 		}
 
-		if err = s.Exec(ctx, applicationUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, applicationUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, applicationInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, applicationUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -2114,8 +2198,29 @@ func (s *Store) UpsertAttachment(ctx context.Context, rr ...*systemType.Attachme
 			return
 		}
 
-		if err = s.Exec(ctx, attachmentUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, attachmentUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, attachmentInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, attachmentUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -2643,8 +2748,29 @@ func (s *Store) UpsertAuthClient(ctx context.Context, rr ...*systemType.AuthClie
 			return
 		}
 
-		if err = s.Exec(ctx, authClientUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, authClientUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, authClientInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, authClientUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -3256,8 +3382,29 @@ func (s *Store) UpsertAuthConfirmedClient(ctx context.Context, rr ...*systemType
 			return
 		}
 
-		if err = s.Exec(ctx, authConfirmedClientUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, authConfirmedClientUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, authConfirmedClientInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, authConfirmedClientUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -3566,8 +3713,29 @@ func (s *Store) UpsertAuthOa2token(ctx context.Context, rr ...*systemType.AuthOa
 			return
 		}
 
-		if err = s.Exec(ctx, authOa2tokenUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, authOa2tokenUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, authOa2tokenInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, authOa2tokenUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -3988,8 +4156,29 @@ func (s *Store) UpsertAuthSession(ctx context.Context, rr ...*systemType.AuthSes
 			return
 		}
 
-		if err = s.Exec(ctx, authSessionUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, authSessionUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, authSessionInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, authSessionUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -4290,8 +4479,29 @@ func (s *Store) UpsertAutomationSession(ctx context.Context, rr ...*automationTy
 			return
 		}
 
-		if err = s.Exec(ctx, automationSessionUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, automationSessionUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, automationSessionInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, automationSessionUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -4834,8 +5044,29 @@ func (s *Store) UpsertAutomationTrigger(ctx context.Context, rr ...*automationTy
 			return
 		}
 
-		if err = s.Exec(ctx, automationTriggerUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, automationTriggerUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, automationTriggerInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, automationTriggerUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -5374,8 +5605,29 @@ func (s *Store) UpsertAutomationWorkflow(ctx context.Context, rr ...*automationT
 			return
 		}
 
-		if err = s.Exec(ctx, automationWorkflowUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, automationWorkflowUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, automationWorkflowInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, automationWorkflowUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -5976,8 +6228,29 @@ func (s *Store) UpsertComposeAttachment(ctx context.Context, rr ...*composeType.
 			return
 		}
 
-		if err = s.Exec(ctx, composeAttachmentUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, composeAttachmentUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, composeAttachmentInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, composeAttachmentUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -6509,8 +6782,29 @@ func (s *Store) UpsertComposeChart(ctx context.Context, rr ...*composeType.Chart
 			return
 		}
 
-		if err = s.Exec(ctx, composeChartUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, composeChartUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, composeChartInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, composeChartUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -7083,8 +7377,29 @@ func (s *Store) UpsertComposeModule(ctx context.Context, rr ...*composeType.Modu
 			return
 		}
 
-		if err = s.Exec(ctx, composeModuleUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, composeModuleUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, composeModuleInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, composeModuleUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -7731,8 +8046,29 @@ func (s *Store) UpsertComposeModuleField(ctx context.Context, rr ...*composeType
 			return
 		}
 
-		if err = s.Exec(ctx, composeModuleFieldUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, composeModuleFieldUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, composeModuleFieldInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, composeModuleFieldUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -8123,8 +8459,29 @@ func (s *Store) UpsertComposeNamespace(ctx context.Context, rr ...*composeType.N
 			return
 		}
 
-		if err = s.Exec(ctx, composeNamespaceUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, composeNamespaceUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, composeNamespaceInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, composeNamespaceUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -8722,8 +9079,29 @@ func (s *Store) UpsertComposePage(ctx context.Context, rr ...*composeType.Page) 
 			return
 		}
 
-		if err = s.Exec(ctx, composePageUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, composePageUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, composePageInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, composePageUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -9345,8 +9723,29 @@ func (s *Store) UpsertCredential(ctx context.Context, rr ...*systemType.Credenti
 			return
 		}
 
-		if err = s.Exec(ctx, credentialUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, credentialUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, credentialInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, credentialUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -9661,8 +10060,29 @@ func (s *Store) UpsertDalConnection(ctx context.Context, rr ...*systemType.DalCo
 			return
 		}
 
-		if err = s.Exec(ctx, dalConnectionUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, dalConnectionUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, dalConnectionInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, dalConnectionUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -10263,8 +10683,29 @@ func (s *Store) UpsertDalSensitivityLevel(ctx context.Context, rr ...*systemType
 			return
 		}
 
-		if err = s.Exec(ctx, dalSensitivityLevelUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, dalSensitivityLevelUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, dalSensitivityLevelInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, dalSensitivityLevelUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -10795,8 +11236,29 @@ func (s *Store) UpsertDataPrivacyRequest(ctx context.Context, rr ...*systemType.
 			return
 		}
 
-		if err = s.Exec(ctx, dataPrivacyRequestUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, dataPrivacyRequestUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, dataPrivacyRequestInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, dataPrivacyRequestUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -11334,8 +11796,29 @@ func (s *Store) UpsertDataPrivacyRequestComment(ctx context.Context, rr ...*syst
 			return
 		}
 
-		if err = s.Exec(ctx, dataPrivacyRequestCommentUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, dataPrivacyRequestCommentUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, dataPrivacyRequestCommentInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, dataPrivacyRequestCommentUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -11817,8 +12300,29 @@ func (s *Store) UpsertFederationExposedModule(ctx context.Context, rr ...*federa
 			return
 		}
 
-		if err = s.Exec(ctx, federationExposedModuleUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, federationExposedModuleUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, federationExposedModuleInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, federationExposedModuleUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -12353,8 +12857,29 @@ func (s *Store) UpsertFederationModuleMapping(ctx context.Context, rr ...*federa
 			return
 		}
 
-		if err = s.Exec(ctx, federationModuleMappingUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, federationModuleMappingUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, federationModuleMappingInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, federationModuleMappingUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -12909,8 +13434,29 @@ func (s *Store) UpsertFederationNode(ctx context.Context, rr ...*federationType.
 			return
 		}
 
-		if err = s.Exec(ctx, federationNodeUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, federationNodeUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, federationNodeInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, federationNodeUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -13327,8 +13873,29 @@ func (s *Store) UpsertFederationNodeSync(ctx context.Context, rr ...*federationT
 			return
 		}
 
-		if err = s.Exec(ctx, federationNodeSyncUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, federationNodeSyncUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, federationNodeSyncInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, federationNodeSyncUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -13902,8 +14469,29 @@ func (s *Store) UpsertFederationSharedModule(ctx context.Context, rr ...*federat
 			return
 		}
 
-		if err = s.Exec(ctx, federationSharedModuleUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, federationSharedModuleUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, federationSharedModuleInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, federationSharedModuleUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -14442,8 +15030,29 @@ func (s *Store) UpsertFlag(ctx context.Context, rr ...*flagType.Flag) (err error
 			return
 		}
 
-		if err = s.Exec(ctx, flagUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, flagUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, flagInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, flagUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -14768,8 +15377,29 @@ func (s *Store) UpsertLabel(ctx context.Context, rr ...*labelsType.Label) (err e
 			return
 		}
 
-		if err = s.Exec(ctx, labelUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, labelUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, labelInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, labelUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -15083,8 +15713,29 @@ func (s *Store) UpsertQueue(ctx context.Context, rr ...*systemType.Queue) (err e
 			return
 		}
 
-		if err = s.Exec(ctx, queueUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, queueUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, queueInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, queueUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -15652,8 +16303,29 @@ func (s *Store) UpsertQueueMessage(ctx context.Context, rr ...*systemType.QueueM
 			return
 		}
 
-		if err = s.Exec(ctx, queueMessageUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, queueMessageUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, queueMessageInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, queueMessageUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -16120,8 +16792,29 @@ func (s *Store) UpsertRbacRule(ctx context.Context, rr ...*rbacType.Rule) (err e
 			return
 		}
 
-		if err = s.Exec(ctx, rbacRuleUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, rbacRuleUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, rbacRuleInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, rbacRuleUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -16393,8 +17086,29 @@ func (s *Store) UpsertReminder(ctx context.Context, rr ...*systemType.Reminder) 
 			return
 		}
 
-		if err = s.Exec(ctx, reminderUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, reminderUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, reminderInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, reminderUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -16931,8 +17645,29 @@ func (s *Store) UpsertReport(ctx context.Context, rr ...*systemType.Report) (err
 			return
 		}
 
-		if err = s.Exec(ctx, reportUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, reportUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, reportInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, reportUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -17530,8 +18265,29 @@ func (s *Store) UpsertResourceActivity(ctx context.Context, rr ...*discoveryType
 			return
 		}
 
-		if err = s.Exec(ctx, resourceActivityUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, resourceActivityUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, resourceActivityInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, resourceActivityUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -17787,8 +18543,29 @@ func (s *Store) UpsertResourceTranslation(ctx context.Context, rr ...*systemType
 			return
 		}
 
-		if err = s.Exec(ctx, resourceTranslationUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, resourceTranslationUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, resourceTranslationInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, resourceTranslationUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -18299,8 +19076,29 @@ func (s *Store) UpsertRole(ctx context.Context, rr ...*systemType.Role) (err err
 			return
 		}
 
-		if err = s.Exec(ctx, roleUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, roleUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, roleInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, roleUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -18975,8 +19773,29 @@ func (s *Store) UpsertRoleMember(ctx context.Context, rr ...*systemType.RoleMemb
 			return
 		}
 
-		if err = s.Exec(ctx, roleMemberUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, roleMemberUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, roleMemberInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, roleMemberUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -19240,8 +20059,29 @@ func (s *Store) UpsertSettingValue(ctx context.Context, rr ...*systemType.Settin
 			return
 		}
 
-		if err = s.Exec(ctx, settingValueUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, settingValueUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, settingValueInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, settingValueUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -19549,8 +20389,29 @@ func (s *Store) UpsertTemplate(ctx context.Context, rr ...*systemType.Template) 
 			return
 		}
 
-		if err = s.Exec(ctx, templateUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, templateUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, templateInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, templateUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
@@ -20161,8 +21022,29 @@ func (s *Store) UpsertUser(ctx context.Context, rr ...*systemType.User) (err err
 			return
 		}
 
-		if err = s.Exec(ctx, userUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
-			return
+		// @todo this solution is ok for now but could be problematic when we start
+		// batching together DB operations.
+		if s.Dialect.Nuances().TwoStepUpsert {
+			var rsp sql.Result
+			rsp, err = s.ExecR(ctx, userUpdateQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+			if c, err := rsp.RowsAffected(); err != nil {
+				return err
+			} else if c > 0 {
+				continue
+			}
+
+			err = s.Exec(ctx, userInsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
+		} else {
+			err = s.Exec(ctx, userUpsertQuery(s.Dialect.GOQU(), rr[i]))
+			if err != nil {
+				return
+			}
 		}
 	}
 
