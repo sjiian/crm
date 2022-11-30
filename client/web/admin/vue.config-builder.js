@@ -66,7 +66,8 @@ module.exports = ({ appFlavour, appName, appLabel, version, theme, packageAlias,
       // not break imports on apps that import this code
       config.resolve.alias.delete('@')
       if (packageAlias) {
-        config.resolve.alias.set(packageAlias, root)
+        packageAlias.forEach(({ alias, path }) => { config.resolve.alias.set(alias, path) })
+        config.resolve.extensions.extensions = ['.js', '.vue', '.json', '.d.ts', '.ts']
       }
 
       if (isTest) {

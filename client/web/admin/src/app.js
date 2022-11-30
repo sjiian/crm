@@ -11,7 +11,8 @@ import './filters'
 import store from './store'
 import router from './router'
 
-import { system } from '@cortezaproject/corteza-js'
+// import { system } from '@cortezaproject/corteza-js'
+import { system } from 'corteza-js'
 import { mixins, corredor, websocket, i18n } from '@cortezaproject/corteza-vue'
 import { mapGetters } from 'vuex'
 
