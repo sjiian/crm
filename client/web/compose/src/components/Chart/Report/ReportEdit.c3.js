@@ -3,28 +3,27 @@ import { default as component } from './ReportEdit.vue'
 
 const props = {
   report: {
-    moduleID: '',
+    moduleID: '291598304537084005',
     filter: '',
     colorScheme: '#fffff',
     metrics: [
       {
         aggregate: 'AVG',
         field: 'count',
-        moduleID: '',
+        moduleID: '291598304537084005',
       },
     ],
     dimensions: [{
       field: 'Rating',
       modifier: '(no grouping / buckets)',
       skipMissing: true,
-      default: '',
     }],
   },
   modules: [
     {
-      moduleID: '',
-      handle: 'Pool',
-      name: 'Pool',
+      moduleID: '291598304537084005',
+      handle: 'Case',
+      name: 'Case',
       fields: [{
         kind: 'String',
         name: 'Sample',
@@ -33,32 +32,45 @@ const props = {
           useRichTextEditor: false,
         },
       }],
+      systemFields () {
+        return Object.freeze([
+          { isSystem: true, name: 'recordID', label: 'Record ID', kind: 'String' },
+          { isSystem: true, name: 'revision', label: 'Revision', kind: 'Number' },
+          { isSystem: true, name: 'ownedBy', label: 'Owned by', kind: 'User' },
+          { isSystem: true, name: 'createdBy', label: 'Created by', kind: 'User' },
+          { isSystem: true, name: 'createdAt', label: 'Created at', kind: 'DateTime' },
+          { isSystem: true, name: 'updatedBy', label: 'Updated by', kind: 'User' },
+          { isSystem: true, name: 'updatedAt', label: 'Updated at', kind: 'DateTime' },
+          { isSystem: true, name: 'deletedBy', label: 'Deleted by', kind: 'User' },
+          { isSystem: true, name: 'deletedAt', label: 'Deleted at', kind: 'DateTime' },
+        ])
+      }
     },
     {
       moduleID: '',
       handle: 'Party',
       name: 'Party',
       fields: [{
-        kind: 'String',
-        name: 'Party',
+        kind: 'Record',
+        name: 'AccountId',
         options: {
           multiLine: false,
           useRichTextEditor: false,
         },
       }],
-    },
-    {
-      moduleID: '',
-      handle: 'Test',
-      name: 'Test',
-      fields: [{
-        kind: 'String',
-        name: 'Test',
-        options: {
-          multiLine: false,
-          useRichTextEditor: false,
-        },
-      }],
+      systemFields () {
+        return Object.freeze([
+          { isSystem: true, name: 'recordID', label: 'Record ID', kind: 'String' },
+          { isSystem: true, name: 'revision', label: 'Revision', kind: 'Number' },
+          { isSystem: true, name: 'ownedBy', label: 'Owned by', kind: 'User' },
+          { isSystem: true, name: 'createdBy', label: 'Created by', kind: 'User' },
+          { isSystem: true, name: 'createdAt', label: 'Created at', kind: 'DateTime' },
+          { isSystem: true, name: 'updatedBy', label: 'Updated by', kind: 'User' },
+          { isSystem: true, name: 'updatedAt', label: 'Updated at', kind: 'DateTime' },
+          { isSystem: true, name: 'deletedBy', label: 'Deleted by', kind: 'User' },
+          { isSystem: true, name: 'deletedAt', label: 'Deleted at', kind: 'DateTime' },
+        ])
+      }
     },
   ],
   supportedMetrics: -1,
@@ -71,6 +83,7 @@ export default {
   group: ['Chart', 'Report'],
   component,
   props,
+  // add controls
   controls: [],
 
   scenarios: [
@@ -82,6 +95,7 @@ export default {
       label: 'Empty form',
       props: {
         ...props,
+        // add props
         modules: [],
       },
     },

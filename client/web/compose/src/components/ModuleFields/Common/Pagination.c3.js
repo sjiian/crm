@@ -14,8 +14,8 @@ export default {
   component,
   props,
   controls: [
-    checkbox('HasPrevPage', 'hasPrevPage'),
-    checkbox('HasNextPage', 'hasNextPage'),
+    checkbox('Enable previous page', 'hasPrevPage'),
+    checkbox('Enable pext Page', 'hasNextPage'),
   ],
 
   scenarios: [
@@ -26,6 +26,7 @@ export default {
     {
       label: 'Empty form',
       props: {
+        ...props,
         hasPrevPage: false,
         hasNextPage: false,
       },

@@ -21,11 +21,11 @@ export default {
   component,
   props,
   controls: [
+    // add more controls
     input('Subtitle', 'namespace.meta.subtitle'),
     input('Description', 'namespace.meta.description'),
     input('Name', 'namespace.name'),
-    checkbox('Enable visit namespace button', 'namespace.enabled'),
-    checkbox('Update namespace button', 'namespace.canUpdateNamespace'),
+    checkbox('Enable namespace', 'namespace.enabled'),
   ],
 
   scenarios: [
@@ -37,13 +37,15 @@ export default {
       label: 'Empty form',
       props: {
         ...props,
-        meta: {
-          subtitle: '',
-          description: '',
+        namespace: {
+          meta: {
+            subtitle: '',
+            description: '',
+          },
+          name: '',
+          enabled: false,
+          canUpdateNamespace: false,
         },
-        name: 'CRM',
-        enabled: false,
-        canUpdateNamespace: false,
       },
     },
   ],

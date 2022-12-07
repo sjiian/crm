@@ -35,13 +35,14 @@ export default {
   component,
   props,
   controls: [
-    checkbox('configurable', 'cap.configurable'),
-    checkbox('multi', 'value.cap.multi'),
+    checkbox('configurable', 'value.cap.configurable'),
+    // checkbox('multi', 'value.cap.multi'),
     checkbox('required', 'value.cap.required'),
-    checkbox('private', 'value.cap.private'),
-    checkbox('isMulti', 'value.isMulti'),
-    checkbox('isRequired', 'value.isRequired'),
-    checkbox('isValid', 'value.isValid'),
+    // checkbox('private', 'value.cap.private'),
+    // checkbox('isMulti', 'value.isMulti'),
+    checkbox('required', 'value.isRequired'),
+    // checkbox('isPrivate', 'value.isPrivate'),
+    checkbox('valid', 'value.isValid'),
   ],
 
   scenarios: [
