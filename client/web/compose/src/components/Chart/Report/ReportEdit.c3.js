@@ -44,7 +44,7 @@ const props = {
           { isSystem: true, name: 'deletedBy', label: 'Deleted by', kind: 'User' },
           { isSystem: true, name: 'deletedAt', label: 'Deleted at', kind: 'DateTime' },
         ])
-      }
+      },
     },
     {
       moduleID: '',
@@ -70,7 +70,7 @@ const props = {
           { isSystem: true, name: 'deletedBy', label: 'Deleted by', kind: 'User' },
           { isSystem: true, name: 'deletedAt', label: 'Deleted at', kind: 'DateTime' },
         ])
-      }
+      },
     },
   ],
   supportedMetrics: -1,

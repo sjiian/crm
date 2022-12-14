@@ -27,6 +27,7 @@ const props = {
   isDuplicate: false,
   canGrant: true,
   hasRecords: false,
+  canManageResourceTranslations: true,
 }
 
 export default {
