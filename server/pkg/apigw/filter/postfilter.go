@@ -13,7 +13,6 @@ import (
 	"github.com/cortezaproject/corteza/server/pkg/apigw/types"
 	errors "github.com/cortezaproject/corteza/server/pkg/errors"
 	"github.com/cortezaproject/corteza/server/pkg/expr"
-	"github.com/cortezaproject/corteza/server/pkg/options"
 )
 
 type (
@@ -26,6 +25,8 @@ type (
 		location *url.URL
 		status   int
 
+		cfg types.Config
+
 		params struct {
 			HTTPStatus int    `json:"status,string"`
 			Location   string `json:"location"`
@@ -36,6 +37,8 @@ type (
 		types.FilterMeta
 
 		reg typesRegistry
+
+		cfg types.Config
 
 		params struct {
 			Header http.Header `json:"header"`
@@ -48,15 +51,17 @@ type (
 
 	defaultJsonResponse struct {
 		types.FilterMeta
+		cfg types.Config
 	}
 )
 
-func NewRedirection(opts options.ApigwOpt) (e *redirection) {
+func NewRedirection(cfg types.Config) (e *redirection) {
 	e = &redirection{}
 
 	e.Name = "redirection"
 	e.Label = "Redirection"
 	e.Kind = types.PostFilter
+	e.cfg = cfg
 
 	e.Args = []*types.FilterMetaArg{
 		{
@@ -74,8 +79,8 @@ func NewRedirection(opts options.ApigwOpt) (e *redirection) {
 	return
 }
 
-func (h redirection) New(opts options.ApigwOpt) types.Handler {
-	return NewRedirection(opts)
+func (h redirection) New(cfg types.Config) types.Handler {
+	return NewRedirection(cfg)
 }
 
 func (h redirection) Enabled() bool {
@@ -94,7 +99,7 @@ func (h redirection) Weight() int {
 	return h.Wgt
 }
 
-func (h *redirection) Merge(params []byte) (types.Handler, error) {
+func (h *redirection) Merge(params []byte, cfg types.Config) (types.Handler, error) {
 	err := json.NewDecoder(bytes.NewBuffer(params)).Decode(&h.params)
 
 	if err != nil {
@@ -113,6 +118,7 @@ func (h *redirection) Merge(params []byte) (types.Handler, error) {
 
 	h.location = loc
 	h.status = h.params.HTTPStatus
+	h.cfg = cfg
 
 	return h, err
 }
@@ -124,18 +130,19 @@ func (h redirection) Handler() types.HandlerFunc {
 	}
 }
 
-func NewDefaultJsonResponse(opts options.ApigwOpt) (e *defaultJsonResponse) {
+func NewDefaultJsonResponse(cfg types.Config) (e *defaultJsonResponse) {
 	e = &defaultJsonResponse{}
 
 	e.Name = "defaultJsonResponse"
 	e.Label = "Default JSON response"
 	e.Kind = types.PostFilter
+	e.cfg = cfg
 
 	return
 }
 
-func (j defaultJsonResponse) New(opts options.ApigwOpt) types.Handler {
-	return NewDefaultJsonResponse(opts)
+func (j defaultJsonResponse) New(cfg types.Config) types.Handler {
+	return NewDefaultJsonResponse(cfg)
 }
 
 func (j defaultJsonResponse) Enabled() bool {
@@ -150,7 +157,9 @@ func (j defaultJsonResponse) Meta() types.FilterMeta {
 	return j.FilterMeta
 }
 
-func (j *defaultJsonResponse) Merge(params []byte) (h types.Handler, err error) {
+func (j *defaultJsonResponse) Merge(params []byte, cfg types.Config) (h types.Handler, err error) {
+	j.cfg = cfg
+
 	return j, err
 }
 
@@ -176,7 +185,7 @@ func checkStatus(typ string, status int) bool {
 	}
 }
 
-func NewResponse(opts options.ApigwOpt, reg typesRegistry) (e *response) {
+func NewResponse(cfg types.Config, reg typesRegistry) (e *response) {
 	e = &response{}
 
 	e.Name = "response"
@@ -197,12 +206,13 @@ func NewResponse(opts options.ApigwOpt, reg typesRegistry) (e *response) {
 	}
 
 	e.reg = reg
+	e.cfg = cfg
 
 	return
 }
 
-func (j response) New(opts options.ApigwOpt) types.Handler {
-	return NewResponse(opts, j.reg)
+func (j response) New(cfg types.Config) types.Handler {
+	return NewResponse(cfg, j.reg)
 }
 
 func (j response) Enabled() bool {
@@ -217,7 +227,7 @@ func (j response) Meta() types.FilterMeta {
 	return j.FilterMeta
 }
 
-func (j *response) Merge(params []byte) (h types.Handler, err error) {
+func (j *response) Merge(params []byte, cfg types.Config) (h types.Handler, err error) {
 	var (
 		parser = expr.NewParser()
 	)
@@ -235,6 +245,7 @@ func (j *response) Merge(params []byte) (h types.Handler, err error) {
 	}
 
 	j.params.Exp.SetEval(j.params.Evaluable)
+	j.cfg = cfg
 
 	return j, err
 }

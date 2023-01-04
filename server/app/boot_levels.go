@@ -20,6 +20,7 @@ import (
 	fedService "github.com/cortezaproject/corteza/server/federation/service"
 	"github.com/cortezaproject/corteza/server/pkg/actionlog"
 	"github.com/cortezaproject/corteza/server/pkg/apigw"
+	apigwTypes "github.com/cortezaproject/corteza/server/pkg/apigw/types"
 	"github.com/cortezaproject/corteza/server/pkg/auth"
 	"github.com/cortezaproject/corteza/server/pkg/corredor"
 	"github.com/cortezaproject/corteza/server/pkg/eventbus"
@@ -416,7 +417,13 @@ func (app *CortezaApp) InitServices(ctx context.Context) (err error) {
 	corredor.Service().SetRoleFinder(sysService.DefaultRole)
 
 	// Initialize API GW bits
-	apigw.Setup(*options.Apigw(), app.Log, app.Store)
+	apigw.Setup(apigwTypes.Config{
+		Enabled:              sysService.CurrentSettings.Apigw.Enabled,
+		ProfilerGlobal:       sysService.CurrentSettings.Apigw.ProfilerGlobal,
+		ProfilerEnabled:      sysService.CurrentSettings.Apigw.ProfilerEnabled,
+		ProxyFollowRedirects: sysService.CurrentSettings.Apigw.ProxyFollowRedirects,
+		ProxyOutboundTimeout: sysService.CurrentSettings.Apigw.ProxyOutboundTimeout,
+	}, app.Log, app.Store)
 
 	if app.Opt.Federation.Enabled {
 		// Initializes federation services
@@ -513,7 +520,7 @@ func (app *CortezaApp) Activate(ctx context.Context) (err error) {
 	updateFederationSettings(app.Opt.Federation, sysService.CurrentSettings)
 	updateAuthSettings(app.AuthService, sysService.CurrentSettings)
 	updatePasswdSettings(app.Opt.Auth, sysService.CurrentSettings)
-	updateApigwSettings(app.Opt.Apigw, sysService.CurrentSettings)
+
 	sysService.DefaultSettings.Register("auth.", func(ctx context.Context, current interface{}, set types.SettingValueSet) {
 		appSettings, is := current.(*types.AppSettings)
 		if !is {
@@ -549,10 +556,13 @@ func (app *CortezaApp) Activate(ctx context.Context) (err error) {
 		messagebus.Service().Watch(ctx, service.DefaultQueue)
 	}
 
-	// Reload routes
-	if err = apigw.Service().Reload(ctx); err != nil {
-		return fmt.Errorf("could not initialize api gateway services: %w", err)
-	}
+	// reload after other services are initialized
+	// the update settings does the reload as well
+	updateApigwSettings(ctx, app.Opt.Apigw, sysService.CurrentSettings)
+	// // Reload routes
+	// if err = apigw.Service().Reload(ctx); err != nil {
+	// 	return fmt.Errorf("could not initialize api gateway services: %w", err)
+	// }
 
 	app.lvl = bootLevelActivated
 	return nil
@@ -659,9 +669,29 @@ func updatePasswdSettings(opt options.AuthOpt, current *types.AppSettings) {
 	current.Auth.Internal.PasswordConstraints.PasswordSecurity = opt.PasswordSecurity
 }
 
-func updateApigwSettings(opt options.ApigwOpt, current *types.AppSettings) {
-	current.Apigw.ProfilerEnabled = opt.ProfilerEnabled
-	current.Apigw.ProfilerGlobal = opt.ProfilerGlobal
+// Loads current settings into integration gateway and handles the updates / reloads
+func updateApigwSettings(ctx context.Context, opt options.ApigwOpt, current *types.AppSettings) {
+
+	updateCurrentSettings := func(ctx context.Context, s *types.AppSettings) {
+		apigw.Service().UpdateSettings(ctx, apigwTypes.Config{
+			Enabled:         true,
+			ProfilerEnabled: s.Apigw.ProfilerEnabled,
+			ProfilerGlobal:  s.Apigw.ProfilerGlobal,
+		})
+	}
+
+	sysService.DefaultSettings.Register("apigw", func(ctx context.Context, current interface{}, _ types.SettingValueSet) {
+		appSettings, is := current.(*types.AppSettings)
+		if !is {
+			return
+		}
+
+		updateCurrentSettings(ctx, appSettings)
+	})
+
+	// on first load, the options (env) can be different than loaded settings
+	// we need to update them here
+	updateCurrentSettings(ctx, current)
 }
 
 // Checks if discovery is enabled in the options

@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 const (
@@ -216,9 +217,14 @@ type (
 
 		// Integration gateway settings
 		Apigw struct {
-			ProfilerEnabled bool `kv:"-" json:"profilerEnabled"`
-			ProfilerGlobal  bool `kv:"-" json:"profilerGlobal"`
-		} `kv:"apigw" json:"apigw"`
+			Enabled bool `kv:"enabled" json:"enabled"`
+
+			ProfilerEnabled bool `kv:"profiler-enabled" json:"profilerEnabled"`
+			ProfilerGlobal  bool `kv:"profiler-global" json:"profilerGlobal"`
+
+			ProxyFollowRedirects bool          `kv:"proxy-follow-redirects" json:"proxyFollowRedirects"`
+			ProxyOutboundTimeout time.Duration `kv:"proxy-outbound-timeout" json:"proxyOutboundTimeout"`
+		} `kv:"apigw" json:"-"`
 
 		// UserInterface settings
 		UI struct {
