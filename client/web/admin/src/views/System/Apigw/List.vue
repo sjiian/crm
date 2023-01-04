@@ -2,6 +2,14 @@
   <b-container
     class="py-3"
   >
+    <span
+      class="text-nowrap"
+    >
+      <c-settings-editor
+        :settings="apigwSettings"
+        @submit="onSettingsSubmit"
+      />
+    </span>
     <c-content-header
       :title="$t('title')"
     >
@@ -48,6 +56,7 @@
         </b-dropdown-item-button>
       </b-dropdown>
     </c-content-header>
+
     <c-resource-list
       :primary-key="primaryKey"
       :filter="filter"
@@ -98,17 +107,21 @@
 <script>
 import * as moment from 'moment'
 import listHelpers from 'corteza-webapp-admin/src/mixins/listHelpers'
+import editorHelpers from 'corteza-webapp-admin/src/mixins/editorHelpers'
 import { mapGetters } from 'vuex'
 import { components } from '@cortezaproject/corteza-vue'
+import CSettingsEditor from 'corteza-webapp-admin/src/components/Apigw/CSettingsEditor'
 const { CResourceList } = components
 
 export default {
   components: {
     CResourceList,
+    CSettingsEditor,
   },
 
   mixins: [
     listHelpers,
+    editorHelpers,
   ],
 
   i18nOptions: {
@@ -119,6 +132,8 @@ export default {
   data () {
     return {
       id: 'routes',
+
+      settings: [],
 
       primaryKey: 'routeID',
       editRoute: 'system.apigw.edit',
@@ -131,6 +146,11 @@ export default {
       sorting: {
         sortBy: 'createdAt',
         sortDesc: true,
+      },
+
+      state: {
+        processing: false,
+        success: false,
       },
 
       fields: [
@@ -176,9 +196,63 @@ export default {
     canGrant () {
       return this.can('system/', 'grant')
     },
+
+    apigwSettings () {
+      if (this.settings.length > 0) {
+        return this.settings.reduce((map, obj) => {
+          const { name, value } = obj
+          const split = name.split('.')
+
+          if (split[0] === 'apigw') {
+            map[name] = value
+          }
+
+          return map
+        }, {})
+      }
+      return {}
+    },
+  },
+
+  created () {
+    this.fetchSettings()
   },
 
   methods: {
+    onSettingsSubmit (settings) {
+      this.state.processing = true
+
+      const values = Object.entries(settings).map(([name, value]) => {
+        return { name, value }
+      })
+
+      this.$SystemAPI.settingsUpdate({ values })
+        .then(() => {
+          this.animateSuccess('state')
+          this.toastSuccess(this.$t('notification:gateway.settings.success'))
+        })
+        .catch(this.toastErrorHandler(this.$t('notification:gateway.settings.error')))
+        .finally(() => {
+          this.state.processing = false
+        })
+    },
+
+    fetchSettings () {
+      this.incLoader()
+
+      this.$SystemAPI.settingsList()
+        .then(settings => {
+          this.settings = settings
+        })
+        .catch(e => {
+          this.toastErrorHandler(this.$t('notification:settings.system.fetch.error'))(e)
+          this.$router.push({ name: 'dashboard' })
+        })
+        .finally(() => {
+          this.decLoader()
+        })
+    },
+
     items () {
       return this.procListResults(this.$SystemAPI.apigwRouteList(this.encodeListParams()))
     },
