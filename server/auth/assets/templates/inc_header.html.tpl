@@ -16,7 +16,7 @@
 	<title>Corteza</title>
 	<style>
 		body {
-			{{ safeCSS .authBg }}
+			{{ .authBg }}
 			background-size: cover;
 			background-attachment: fixed;
 		}

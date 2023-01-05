@@ -42,6 +42,8 @@ func (h *AuthHandlers) devSceneView(w http.ResponseWriter, r *http.Request) {
 		r.URL.Query().Get("scene"),
 	)
 
+	s.Data["authBg"] = h.bgStylesData()
+
 	if err == nil && s != nil {
 		err = h.Templates.ExecuteTemplate(w, s.Template+".html.tpl", s.Data)
 		return
