@@ -3342,6 +3342,98 @@ var (
 		}
 	}
 
+	// orderTable represents orders store table
+	//
+	// This value is auto-generated
+	orderTable = goqu.T("orders")
+
+	// orderSelectQuery assembles select query for fetching orders
+	//
+	// This function is auto-generated
+	orderSelectQuery = func(d goqu.DialectWrapper) *goqu.SelectDataset {
+		return d.Select(
+			"id",
+			"quantity",
+			"code",
+			"created_at",
+			"updated_at",
+			"deleted_at",
+		).From(orderTable)
+	}
+
+	// orderInsertQuery assembles query inserting orders
+	//
+	// This function is auto-generated
+	orderInsertQuery = func(d goqu.DialectWrapper, res *systemType.Order) *goqu.InsertDataset {
+		return d.Insert(orderTable).
+			Rows(goqu.Record{
+				"id":         res.ID,
+				"quantity":   res.Quantity,
+				"code":       res.Code,
+				"created_at": res.CreatedAt,
+				"updated_at": res.UpdatedAt,
+				"deleted_at": res.DeletedAt,
+			})
+	}
+
+	// orderUpsertQuery assembles (insert+on-conflict) query for replacing orders
+	//
+	// This function is auto-generated
+	orderUpsertQuery = func(d goqu.DialectWrapper, res *systemType.Order) *goqu.InsertDataset {
+		var target = `,id`
+
+		return orderInsertQuery(d, res).
+			OnConflict(
+				goqu.DoUpdate(target[1:],
+					goqu.Record{
+						"quantity":   res.Quantity,
+						"code":       res.Code,
+						"created_at": res.CreatedAt,
+						"updated_at": res.UpdatedAt,
+						"deleted_at": res.DeletedAt,
+					},
+				),
+			)
+	}
+
+	// orderUpdateQuery assembles query for updating orders
+	//
+	// This function is auto-generated
+	orderUpdateQuery = func(d goqu.DialectWrapper, res *systemType.Order) *goqu.UpdateDataset {
+		return d.Update(orderTable).
+			Set(goqu.Record{
+				"quantity":   res.Quantity,
+				"code":       res.Code,
+				"created_at": res.CreatedAt,
+				"updated_at": res.UpdatedAt,
+				"deleted_at": res.DeletedAt,
+			}).
+			Where(orderPrimaryKeys(res))
+	}
+
+	// orderDeleteQuery assembles delete query for removing orders
+	//
+	// This function is auto-generated
+	orderDeleteQuery = func(d goqu.DialectWrapper, ee ...goqu.Expression) *goqu.DeleteDataset {
+		return d.Delete(orderTable).Where(ee...)
+	}
+
+	// orderDeleteQuery assembles delete query for removing orders
+	//
+	// This function is auto-generated
+	orderTruncateQuery = func(d goqu.DialectWrapper) *goqu.TruncateDataset {
+		return d.Truncate(orderTable)
+	}
+
+	// orderPrimaryKeys assembles set of conditions for all primary keys
+	//
+	// This function is auto-generated
+	orderPrimaryKeys = func(res *systemType.Order) goqu.Ex {
+		return goqu.Ex{
+			"id": res.ID,
+		}
+	}
+
 	// queueTable represents queues store table
 	//
 	// This value is auto-generated

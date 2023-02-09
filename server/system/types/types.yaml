@@ -8,6 +8,7 @@ types:
     noIdField: true
   User:
     labelResourceType: user
+  Order: {}
   DalConnection:
   DalSensitivityLevel:
   Application:

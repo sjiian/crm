@@ -1461,6 +1461,64 @@ var DataPrivacyRequestComment = &dal.Model{
 	},
 }
 
+var Order = &dal.Model{
+	Ident:        "orders",
+	ResourceType: types.OrderResourceType,
+
+	Attributes: dal.AttributeSet{
+		&dal.Attribute{
+			Ident: "ID",
+			Type:  &dal.TypeID{},
+			Store: &dal.CodecAlias{Ident: "id"},
+		},
+
+		&dal.Attribute{
+			Ident: "Quantity", Sortable: true,
+			Type:  &dal.TypeNumber{Precision: -1, Scale: -1},
+			Store: &dal.CodecAlias{Ident: "quantity"},
+		},
+
+		&dal.Attribute{
+			Ident: "Code", Sortable: true,
+			Type:  &dal.TypeText{},
+			Store: &dal.CodecAlias{Ident: "code"},
+		},
+
+		&dal.Attribute{
+			Ident: "CreatedAt", Sortable: true,
+			Type: &dal.TypeTimestamp{
+				DefaultCurrentTimestamp: true, Timezone: true, Precision: -1,
+			},
+			Store: &dal.CodecAlias{Ident: "created_at"},
+		},
+
+		&dal.Attribute{
+			Ident: "UpdatedAt", Sortable: true,
+			Type:  &dal.TypeTimestamp{Nullable: true, Timezone: true, Precision: -1},
+			Store: &dal.CodecAlias{Ident: "updated_at"},
+		},
+
+		&dal.Attribute{
+			Ident: "DeletedAt", Sortable: true,
+			Type:  &dal.TypeTimestamp{Nullable: true, Timezone: true, Precision: -1},
+			Store: &dal.CodecAlias{Ident: "deleted_at"},
+		},
+	},
+
+	Indexes: dal.IndexSet{
+		&dal.Index{
+			Ident: "PRIMARY",
+			Type:  "BTREE",
+
+			Fields: []*dal.IndexField{
+				{
+					AttributeIdent: "ID",
+				},
+			},
+		},
+	},
+}
+
 var Queue = &dal.Model{
 	Ident:        "queue_settings",
 	ResourceType: types.QueueResourceType,
@@ -2496,6 +2554,7 @@ func init() {
 		DalSensitivityLevel,
 		DataPrivacyRequest,
 		DataPrivacyRequestComment,
+		Order,
 		Queue,
 		QueueMessage,
 		Reminder,

@@ -29,6 +29,7 @@ component: schema.#component & {
     "settings":              				settings
     "template":              				template
     "user":                  				user
+    "order":                  			order
     "dal-connection":        				dal_connection
     "dal-sensitivity-level": 				dal_sensitivity_level
 	}
@@ -46,6 +47,9 @@ component: schema.#component & {
 
 		"user.create": description:  "Create users"
 		"users.search": description: "List, search or filter users"
+
+		"order.create": description:  "Create orders"
+		"orders.search": description: "List, search or filter orders"
 
 		"dal-connection.create": description:  "Create DAL connections"
 		"dal-connections.search": description: "List, search or filter DAL connections"

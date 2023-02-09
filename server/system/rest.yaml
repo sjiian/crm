@@ -415,6 +415,24 @@ endpoints:
           type: "[]string"
           required: true
           title: Clone set of rules to roleID
+- title: Bakery
+  path: "/bakery"
+  entrypoint: bakery
+  apis:
+  - name: bake
+    method: POST
+    title: Bake something
+    path: "/bake"
+    parameters:
+      post:
+      - type: int
+        name: quantity
+        required: true
+        title: Quantity
+      - type: string
+        name: code
+        required: true
+        title: Code
 - title: Users
   path: "/users"
   entrypoint: user
@@ -425,6 +443,22 @@ endpoints:
     - github.com/cortezaproject/corteza/server/pkg/label
     - github.com/cortezaproject/corteza/server/system/types
   apis:
+  - name: promote
+    method: POST
+    title: Promote user
+    path: "/{userID}/promote"
+    parameters:
+      path:
+      - type: uint64
+        name: userID
+        required: true
+        title: User ID
+      post:
+      - type: uint64
+        name: roleID
+        required: true
+        title: Role ID
+
   - name: list
     method: GET
     title: Search users (Directory)

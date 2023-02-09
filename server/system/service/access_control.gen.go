@@ -145,6 +145,7 @@ func (svc accessControl) Resources() []rbac.Resource {
 		rbac.NewResource(types.RoleRbacResource(0)),
 		rbac.NewResource(types.TemplateRbacResource(0)),
 		rbac.NewResource(types.UserRbacResource(0)),
+		rbac.NewResource(types.OrderRbacResource(0)),
 		rbac.NewResource(types.DalConnectionRbacResource(0)),
 		rbac.NewResource(types.ComponentRbacResource()),
 	}
@@ -346,6 +347,21 @@ func (svc accessControl) List() (out []map[string]string) {
 			"op":   "credentials.manage",
 		},
 		{
+			"type": types.OrderResourceType,
+			"any":  types.OrderRbacResource(0),
+			"op":   "read",
+		},
+		{
+			"type": types.OrderResourceType,
+			"any":  types.OrderRbacResource(0),
+			"op":   "update",
+		},
+		{
+			"type": types.OrderResourceType,
+			"any":  types.OrderRbacResource(0),
+			"op":   "delete",
+		},
+		{
 			"type": types.DalConnectionResourceType,
 			"any":  types.DalConnectionRbacResource(0),
 			"op":   "read",
@@ -414,6 +430,16 @@ func (svc accessControl) List() (out []map[string]string) {
 			"type": types.ComponentResourceType,
 			"any":  types.ComponentRbacResource(),
 			"op":   "users.search",
+		},
+		{
+			"type": types.ComponentResourceType,
+			"any":  types.ComponentRbacResource(),
+			"op":   "order.create",
+		},
+		{
+			"type": types.ComponentResourceType,
+			"any":  types.ComponentRbacResource(),
+			"op":   "orders.search",
 		},
 		{
 			"type": types.ComponentResourceType,
@@ -868,6 +894,27 @@ func (svc accessControl) CanManageCredentialsOnUser(ctx context.Context, r *type
 	return svc.can(ctx, "credentials.manage", r)
 }
 
+// CanReadOrder checks if current user can read user
+//
+// This function is auto-generated
+func (svc accessControl) CanReadOrder(ctx context.Context, r *types.Order) bool {
+	return svc.can(ctx, "read", r)
+}
+
+// CanUpdateOrder checks if current user can update user
+//
+// This function is auto-generated
+func (svc accessControl) CanUpdateOrder(ctx context.Context, r *types.Order) bool {
+	return svc.can(ctx, "update", r)
+}
+
+// CanDeleteOrder checks if current user can delete user
+//
+// This function is auto-generated
+func (svc accessControl) CanDeleteOrder(ctx context.Context, r *types.Order) bool {
+	return svc.can(ctx, "delete", r)
+}
+
 // CanReadDalConnection checks if current user can read connection
 //
 // This function is auto-generated
@@ -974,6 +1021,22 @@ func (svc accessControl) CanCreateUser(ctx context.Context) bool {
 func (svc accessControl) CanSearchUsers(ctx context.Context) bool {
 	r := &types.Component{}
 	return svc.can(ctx, "users.search", r)
+}
+
+// CanCreateOrder checks if current user can create orders
+//
+// This function is auto-generated
+func (svc accessControl) CanCreateOrder(ctx context.Context) bool {
+	r := &types.Component{}
+	return svc.can(ctx, "order.create", r)
+}
+
+// CanSearchOrders checks if current user can list, search or filter orders
+//
+// This function is auto-generated
+func (svc accessControl) CanSearchOrders(ctx context.Context) bool {
+	r := &types.Component{}
+	return svc.can(ctx, "orders.search", r)
 }
 
 // CanCreateDalConnection checks if current user can create dal connections
@@ -1151,6 +1214,8 @@ func rbacResourceValidator(r string, oo ...string) error {
 		return rbacTemplateResourceValidator(r, oo...)
 	case types.UserResourceType:
 		return rbacUserResourceValidator(r, oo...)
+	case types.OrderResourceType:
+		return rbacOrderResourceValidator(r, oo...)
 	case types.DalConnectionResourceType:
 		return rbacDalConnectionResourceValidator(r, oo...)
 	case types.ComponentResourceType:
@@ -1233,6 +1298,12 @@ func (svc accessControl) resourceLoader(ctx context.Context, resource string) (r
 		}
 
 		return loadUser(ctx, svc.store, ids[0])
+	case types.OrderResourceType:
+		if hasWildcard {
+			return rbac.NewResource(types.OrderRbacResource(0)), nil
+		}
+
+		return loadOrder(ctx, svc.store, ids[0])
 	case types.DalConnectionResourceType:
 		if hasWildcard {
 			return rbac.NewResource(types.DalConnectionRbacResource(0)), nil
@@ -1317,6 +1388,12 @@ func rbacResourceOperations(r string) map[string]bool {
 			"impersonate":        true,
 			"credentials.manage": true,
 		}
+	case types.OrderResourceType:
+		return map[string]bool{
+			"read":   true,
+			"update": true,
+			"delete": true,
+		}
 	case types.DalConnectionResourceType:
 		return map[string]bool{
 			"read":              true,
@@ -1336,6 +1413,8 @@ func rbacResourceOperations(r string) map[string]bool {
 			"roles.search":                 true,
 			"user.create":                  true,
 			"users.search":                 true,
+			"order.create":                 true,
+			"orders.search":                true,
 			"dal-connection.create":        true,
 			"dal-connections.search":       true,
 			"dal-sensitivity-level.manage": true,
@@ -1747,6 +1826,50 @@ func rbacUserResourceValidator(r string, oo ...string) error {
 		if pp[i] != "*" {
 			if i > 0 && pp[i-1] == "*" {
 				return fmt.Errorf("invalid path wildcard level (%d) for user resource", i)
+			}
+
+			if _, err := cast.ToUint64E(pp[i]); err != nil {
+				return fmt.Errorf("invalid reference for %s: '%s'", prc[i], pp[i])
+			}
+		}
+	}
+	return nil
+}
+
+// rbacOrderResourceValidator checks validity of RBAC resource and operations
+//
+// Can be called without operations to check for validity of resource string only
+//
+// This function is auto-generated
+func rbacOrderResourceValidator(r string, oo ...string) error {
+	if !strings.HasPrefix(r, types.OrderResourceType) {
+		// expecting resource to always include path
+		return fmt.Errorf("invalid resource type")
+	}
+
+	defOps := rbacResourceOperations(r)
+	for _, o := range oo {
+		if !defOps[o] {
+			return fmt.Errorf("invalid operation '%s' for order resource", o)
+		}
+	}
+
+	const sep = "/"
+	var (
+		pp  = strings.Split(strings.Trim(r[len(types.OrderResourceType):], sep), sep)
+		prc = []string{
+			"ID",
+		}
+	)
+
+	if len(pp) != len(prc) {
+		return fmt.Errorf("invalid resource path structure")
+	}
+
+	for i := 0; i < len(pp); i++ {
+		if pp[i] != "*" {
+			if i > 0 && pp[i-1] == "*" {
+				return fmt.Errorf("invalid path wildcard level (%d) for order resource", i)
 			}
 
 			if _, err := cast.ToUint64E(pp[i]); err != nil {

@@ -119,6 +119,9 @@ type (
 		// optional label filter function called after the generated function
 		Label func(*Store, labelsType.LabelFilter) ([]goqu.Expression, labelsType.LabelFilter, error)
 
+		// optional order filter function called after the generated function
+		Order func(*Store, systemType.OrderFilter) ([]goqu.Expression, systemType.OrderFilter, error)
+
 		// optional queue filter function called after the generated function
 		Queue func(*Store, systemType.QueueFilter) ([]goqu.Expression, systemType.QueueFilter, error)
 
@@ -963,6 +966,28 @@ func LabelFilter(f labelsType.LabelFilter) (ee []goqu.Expression, _ labelsType.L
 
 	if len(f.ResourceID) > 0 {
 		ee = append(ee, goqu.C("rel_resource").In(f.ResourceID))
+	}
+
+	return ee, f, err
+}
+
+// OrderFilter returns logical expressions
+//
+// This function is called from Store.QueryOrders() and can be extended
+// by setting Store.Filters.Order. Extension is called after all expressions
+// are generated and can choose to ignore or alter them.
+//
+// This function is auto-generated
+func OrderFilter(f systemType.OrderFilter) (ee []goqu.Expression, _ systemType.OrderFilter, err error) {
+
+	if expr := stateNilComparison("deleted_at", f.Deleted); expr != nil {
+		ee = append(ee, expr)
+	}
+
+	if f.Query != "" {
+		ee = append(ee, goqu.Or(
+			goqu.C("code").ILike("%"+f.Query+"%"),
+		))
 	}
 
 	return ee, f, err

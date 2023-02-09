@@ -127,6 +127,19 @@ func SystemUserRbacReferences(user string) (res *Ref, pp []*Ref, err error) {
 	return
 }
 
+// SystemOrderRbacReferences generates RBAC references
+//
+// Resources with "envoy: false" are skipped
+//
+// This function is auto-generated
+func SystemOrderRbacReferences(order string) (res *Ref, pp []*Ref, err error) {
+	if order != "*" {
+		res = &Ref{ResourceType: types.OrderResourceType, Identifiers: MakeIdentifiers(order)}
+	}
+
+	return
+}
+
 // SystemDalConnectionRbacReferences generates RBAC references
 //
 // Resources with "envoy: false" are skipped

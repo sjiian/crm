@@ -35,6 +35,18 @@ var (
 
 type (
 	// Internal API interface
+	UserPromote struct {
+		// UserID PATH parameter
+		//
+		// User ID
+		UserID uint64 `json:",string"`
+
+		// RoleID POST parameter
+		//
+		// Role ID
+		RoleID uint64 `json:",string"`
+	}
+
 	UserList struct {
 		// UserID GET parameter
 		//
@@ -328,6 +340,89 @@ type (
 		Upload *multipart.FileHeader
 	}
 )
+
+// NewUserPromote request
+func NewUserPromote() *UserPromote {
+	return &UserPromote{}
+}
+
+// Auditable returns all auditable/loggable parameters
+func (r UserPromote) Auditable() map[string]interface{} {
+	return map[string]interface{}{
+		"userID": r.UserID,
+		"roleID": r.RoleID,
+	}
+}
+
+// Auditable returns all auditable/loggable parameters
+func (r UserPromote) GetUserID() uint64 {
+	return r.UserID
+}
+
+// Auditable returns all auditable/loggable parameters
+func (r UserPromote) GetRoleID() uint64 {
+	return r.RoleID
+}
+
+// Fill processes request and fills internal variables
+func (r *UserPromote) Fill(req *http.Request) (err error) {
+
+	if strings.HasPrefix(strings.ToLower(req.Header.Get("content-type")), "application/json") {
+		err = json.NewDecoder(req.Body).Decode(r)
+
+		switch {
+		case err == io.EOF:
+			err = nil
+		case err != nil:
+			return fmt.Errorf("error parsing http request body: %w", err)
+		}
+	}
+
+	{
+		// Caching 32MB to memory, the rest to disk
+		if err = req.ParseMultipartForm(32 << 20); err != nil && err != http.ErrNotMultipart {
+			return err
+		} else if err == nil {
+			// Multipart params
+
+			if val, ok := req.MultipartForm.Value["roleID"]; ok && len(val) > 0 {
+				r.RoleID, err = payload.ParseUint64(val[0]), nil
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	{
+		if err = req.ParseForm(); err != nil {
+			return err
+		}
+
+		// POST params
+
+		if val, ok := req.Form["roleID"]; ok && len(val) > 0 {
+			r.RoleID, err = payload.ParseUint64(val[0]), nil
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	{
+		var val string
+		// path params
+
+		val = chi.URLParam(req, "userID")
+		r.UserID, err = payload.ParseUint64(val), nil
+		if err != nil {
+			return err
+		}
+
+	}
+
+	return err
+}
 
 // NewUserList request
 func NewUserList() *UserList {

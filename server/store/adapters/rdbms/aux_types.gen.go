@@ -464,6 +464,16 @@ type (
 		Value      string `db:"value"`
 	}
 
+	// auxOrder is an auxiliary structure used for transporting to/from RDBMS store
+	auxOrder struct {
+		ID        uint64     `db:"id"`
+		Quantity  int        `db:"quantity"`
+		Code      string     `db:"code"`
+		CreatedAt time.Time  `db:"created_at"`
+		UpdatedAt *time.Time `db:"updated_at"`
+		DeletedAt *time.Time `db:"deleted_at"`
+	}
+
 	// auxQueue is an auxiliary structure used for transporting to/from RDBMS store
 	auxQueue struct {
 		ID        uint64               `db:"id"`
@@ -2268,6 +2278,47 @@ func (aux *auxLabel) scan(row scanner) error {
 		&aux.ResourceID,
 		&aux.Name,
 		&aux.Value,
+	)
+}
+
+// encodes Order to auxOrder
+//
+// This function is auto-generated
+func (aux *auxOrder) encode(res *systemType.Order) (_ error) {
+	aux.ID = res.ID
+	aux.Quantity = res.Quantity
+	aux.Code = res.Code
+	aux.CreatedAt = res.CreatedAt
+	aux.UpdatedAt = res.UpdatedAt
+	aux.DeletedAt = res.DeletedAt
+	return
+}
+
+// decodes Order from auxOrder
+//
+// This function is auto-generated
+func (aux auxOrder) decode() (res *systemType.Order, _ error) {
+	res = new(systemType.Order)
+	res.ID = aux.ID
+	res.Quantity = aux.Quantity
+	res.Code = aux.Code
+	res.CreatedAt = aux.CreatedAt
+	res.UpdatedAt = aux.UpdatedAt
+	res.DeletedAt = aux.DeletedAt
+	return
+}
+
+// scans row and fills auxOrder fields
+//
+// This function is auto-generated
+func (aux *auxOrder) scan(row scanner) error {
+	return row.Scan(
+		&aux.ID,
+		&aux.Quantity,
+		&aux.Code,
+		&aux.CreatedAt,
+		&aux.UpdatedAt,
+		&aux.DeletedAt,
 	)
 }
 

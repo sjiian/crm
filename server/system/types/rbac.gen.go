@@ -293,6 +293,36 @@ func UserRbacResourceTpl() string {
 	return "%s/%s"
 }
 
+// RbacResource returns string representation of RBAC resource for Order by calling OrderRbacResource fn
+//
+// RBAC resource is in the corteza::system:order/... format
+//
+// This function is auto-generated
+func (r Order) RbacResource() string {
+	return OrderRbacResource(r.ID)
+}
+
+// OrderRbacResource returns string representation of RBAC resource for Order
+//
+// RBAC resource is in the corteza::system:order/... format
+//
+// This function is auto-generated
+func OrderRbacResource(id uint64) string {
+	cpts := []interface{}{OrderResourceType}
+	if id != 0 {
+		cpts = append(cpts, strconv.FormatUint(id, 10))
+	} else {
+		cpts = append(cpts, "*")
+	}
+
+	return fmt.Sprintf(OrderRbacResourceTpl(), cpts...)
+
+}
+
+func OrderRbacResourceTpl() string {
+	return "%s/%s"
+}
+
 // RbacResource returns string representation of RBAC resource for DalConnection by calling DalConnectionRbacResource fn
 //
 // RBAC resource is in the corteza::system:dal-connection/... format

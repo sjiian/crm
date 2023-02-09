@@ -28,6 +28,7 @@ const (
 	SettingValueResourceType              = "corteza::system:settings"
 	TemplateResourceType                  = "corteza::system:template"
 	UserResourceType                      = "corteza::system:user"
+	OrderResourceType                     = "corteza::system:order"
 	DalConnectionResourceType             = "corteza::system:dal-connection"
 	DalSensitivityLevelResourceType       = "corteza::system:dal-sensitivity-level"
 	ComponentResourceType                 = "corteza::system"

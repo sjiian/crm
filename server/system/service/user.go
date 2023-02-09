@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/mail"
 	"regexp"
@@ -18,6 +19,7 @@ import (
 	"github.com/cortezaproject/corteza/server/store"
 	"github.com/cortezaproject/corteza/server/system/service/event"
 	"github.com/cortezaproject/corteza/server/system/types"
+	"github.com/davecgh/go-spew/spew"
 )
 
 const (
@@ -76,6 +78,7 @@ type (
 		FindByAny(ctx context.Context, identifier interface{}) (*types.User, error)
 		Find(context.Context, types.UserFilter) (types.UserSet, types.UserFilter, error)
 
+		Promote(ctx context.Context, userID, roleID uint64) error
 		Create(ctx context.Context, input *types.User) (*types.User, error)
 		Update(ctx context.Context, mod *types.User) (*types.User, error)
 		ToggleEmailConfirmation(ctx context.Context, userID uint64, confirm bool) error
@@ -322,6 +325,11 @@ func (svc user) Find(ctx context.Context, filter types.UserFilter) (uu types.Use
 	}()
 
 	return uu, f, svc.recordAction(ctx, uaProps, UserActionSearch, err)
+}
+
+func (svc user) Promote(ctx context.Context, userID, roleID uint64) error {
+	spew.Dump(fmt.Sprintf("promoting %d to %d", userID, roleID))
+	return nil
 }
 
 func (svc user) Create(ctx context.Context, new *types.User) (u *types.User, err error) {

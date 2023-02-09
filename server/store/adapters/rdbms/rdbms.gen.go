@@ -60,6 +60,7 @@ var (
 	_ store.FederationSharedModules    = &Store{}
 	_ store.Flags                      = &Store{}
 	_ store.Labels                     = &Store{}
+	_ store.Orders                     = &Store{}
 	_ store.Queues                     = &Store{}
 	_ store.QueueMessages              = &Store{}
 	_ store.RbacRules                  = &Store{}
@@ -15242,6 +15243,608 @@ func (s *Store) collectLabelCursorValues(res *labelsType.Label, cc ...*filter.So
 //
 // This function is auto-generated
 func (s *Store) checkLabelConstraints(ctx context.Context, res *labelsType.Label) (err error) {
+	return nil
+}
+
+// CreateOrder creates one or more rows in order collection
+//
+// This function is auto-generated
+func (s *Store) CreateOrder(ctx context.Context, rr ...*systemType.Order) (err error) {
+	for i := range rr {
+		if err = s.checkOrderConstraints(ctx, rr[i]); err != nil {
+			return
+		}
+
+		if err = s.Exec(ctx, orderInsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
+			return
+		}
+	}
+
+	return
+}
+
+// UpdateOrder updates one or more existing entries in order collection
+//
+// This function is auto-generated
+func (s *Store) UpdateOrder(ctx context.Context, rr ...*systemType.Order) (err error) {
+	for i := range rr {
+		if err = s.checkOrderConstraints(ctx, rr[i]); err != nil {
+			return
+		}
+
+		if err = s.Exec(ctx, orderUpdateQuery(s.Dialect.GOQU(), rr[i])); err != nil {
+			return
+		}
+	}
+
+	return
+}
+
+// UpsertOrder updates one or more existing entries in order collection
+//
+// This function is auto-generated
+func (s *Store) UpsertOrder(ctx context.Context, rr ...*systemType.Order) (err error) {
+	for i := range rr {
+		if err = s.checkOrderConstraints(ctx, rr[i]); err != nil {
+			return
+		}
+
+		if err = s.Exec(ctx, orderUpsertQuery(s.Dialect.GOQU(), rr[i])); err != nil {
+			return
+		}
+	}
+
+	return
+}
+
+// DeleteOrder Deletes one or more entries from order collection
+//
+// This function is auto-generated
+func (s *Store) DeleteOrder(ctx context.Context, rr ...*systemType.Order) (err error) {
+	for i := range rr {
+		if err = s.Exec(ctx, orderDeleteQuery(s.Dialect.GOQU(), orderPrimaryKeys(rr[i]))); err != nil {
+			return
+		}
+	}
+
+	return nil
+}
+
+// DeleteOrderByID deletes single entry from order collection
+//
+// This function is auto-generated
+func (s *Store) DeleteOrderByID(ctx context.Context, id uint64) error {
+	return s.Exec(ctx, orderDeleteQuery(s.Dialect.GOQU(), goqu.Ex{
+		"id": id,
+	}))
+}
+
+// TruncateOrders Deletes all rows from the order collection
+func (s *Store) TruncateOrders(ctx context.Context) error {
+	return s.Exec(ctx, orderTruncateQuery(s.Dialect.GOQU()))
+}
+
+// SearchOrders returns (filtered) set of Orders
+//
+// This function is auto-generated
+func (s *Store) SearchOrders(ctx context.Context, f systemType.OrderFilter) (set systemType.OrderSet, _ systemType.OrderFilter, err error) {
+
+	// Cleanup unwanted cursor values (only relevant is f.PageCursor, next&prev are reset and returned)
+	f.PrevPage, f.NextPage = nil, nil
+
+	if f.PageCursor != nil {
+		if f.IncPageNavigation || f.IncTotal {
+			return nil, f, fmt.Errorf("not allowed to fetch page navigation or total item count with page cursor")
+		}
+
+		// Page cursor exists; we need to validate it against used sort
+		// To cover the case when paging cursor is set but sorting is empty, we collect the sorting instructions
+		// from the cursor.
+		// This (extracted sorting info) is then returned as part of response
+		if f.Sort, err = f.PageCursor.Sort(f.Sort); err != nil {
+			return
+		}
+	}
+
+	// Make sure results are always sorted at least by primary keys
+	if f.Sort.Get("id") == nil {
+		f.Sort = append(f.Sort, &filter.SortExpr{
+			Column:     "id",
+			Descending: f.Sort.LastDescending(),
+		})
+	}
+
+	// Cloned sorting instructions for the actual sorting
+	// Original are passed to the etchFullPageOfOrders fn used for cursor creation;
+	// direction information it MUST keep the initial
+	sort := f.Sort.Clone()
+
+	// When cursor for a previous page is used it's marked as reversed
+	// This tells us to flip the descending flag on all used sort keys
+	if f.PageCursor != nil && f.PageCursor.ROrder {
+		sort.Reverse()
+	}
+
+	set, f.PrevPage, f.NextPage, err = s.fetchFullPageOfOrders(ctx, f, sort)
+
+	f.PageCursor = nil
+	if err != nil {
+		return nil, f, err
+	}
+
+	if f.IncTotal {
+		// Calc total from the number of items fetched
+		// even if we do build the page navigation
+		f.Total = uint(len(set))
+
+		if f.Limit > 0 && uint(len(set)) == f.Limit {
+			// there are fewer items fetched then requested limit
+			limit := f.Limit
+			f.Limit = 0
+			var navSet systemType.OrderSet
+			if navSet, _, _, err = s.fetchFullPageOfOrders(ctx, f, sort); err != nil {
+				return
+			} else {
+				f.Total = uint(len(navSet))
+				f.Limit = limit
+			}
+		}
+	}
+
+	return set, f, nil
+}
+
+// fetchFullPageOfOrders collects all requested results.
+//
+// Function applies:
+//  - cursor conditions (where ...)
+//  - limit
+//
+// Main responsibility of this function is to perform additional sequential queries in case when not enough results
+// are collected due to failed check on a specific row (by check fn).
+//
+// Function then moves cursor to the last item fetched
+//
+// This function is auto-generated
+func (s *Store) fetchFullPageOfOrders(
+	ctx context.Context,
+	filter systemType.OrderFilter,
+	sort filter.SortExprSet,
+) (set []*systemType.Order, prev, next *filter.PagingCursor, err error) {
+	var (
+		aux []*systemType.Order
+
+		// When cursor for a previous page is used it's marked as reversed
+		// This tells us to flip the descending flag on all used sort keys
+		reversedOrder = filter.PageCursor != nil && filter.PageCursor.ROrder
+
+		// Copy no. of required items to limit
+		// Limit will change when doing subsequent queries to fill
+		// the set with all required items
+		limit = filter.Limit
+
+		reqItems = filter.Limit
+
+		// cursor to prev. page is only calculated when cursor is used
+		hasPrev = filter.PageCursor != nil
+
+		// next cursor is calculated when there are more pages to come
+		hasNext bool
+
+		tryFilter systemType.OrderFilter
+	)
+
+	set = make([]*systemType.Order, 0, DefaultSliceCapacity)
+
+	for try := 0; try < MaxRefetches; try++ {
+		// Copy filter & apply custom sorting that might be affected by cursor
+		tryFilter = filter
+		tryFilter.Sort = sort
+
+		if limit > 0 {
+			// fetching + 1 to peak ahead if there are more items
+			// we can fetch (next-page cursor)
+			tryFilter.Limit = limit + 1
+		}
+
+		if aux, hasNext, err = s.QueryOrders(ctx, tryFilter); err != nil {
+			return nil, nil, nil, err
+		}
+
+		if len(aux) == 0 {
+			// nothing fetched
+			break
+		}
+
+		// append fetched items
+		set = append(set, aux...)
+
+		if reqItems == 0 || !hasNext {
+			// no max requested items specified, break out
+			break
+		}
+
+		collected := uint(len(set))
+
+		if reqItems > collected {
+			// not enough items fetched, try again with adjusted limit
+			limit = reqItems - collected
+
+			if limit < MinEnsureFetchLimit {
+				// In case limit is set very low and we've missed records in the first fetch,
+				// make sure next fetch limit is a bit higher
+				limit = MinEnsureFetchLimit
+			}
+
+			// Update cursor so that it points to the last item fetched
+			tryFilter.PageCursor = s.collectOrderCursorValues(set[collected-1], filter.Sort...)
+
+			// Copy reverse flag from sorting
+			tryFilter.PageCursor.LThen = filter.Sort.Reversed()
+			continue
+		}
+
+		if reqItems < collected {
+			set = set[:reqItems]
+		}
+
+		break
+	}
+
+	collected := len(set)
+
+	if collected == 0 {
+		return nil, nil, nil, nil
+	}
+
+	if reversedOrder {
+		// Fetched set needs to be reversed because we've forced a descending order to get the previous page
+		for i, j := 0, collected-1; i < j; i, j = i+1, j-1 {
+			set[i], set[j] = set[j], set[i]
+		}
+
+		// when in reverse-order rules on what cursor to return change
+		hasPrev, hasNext = hasNext, hasPrev
+	}
+
+	if hasPrev {
+		prev = s.collectOrderCursorValues(set[0], filter.Sort...)
+		prev.ROrder = true
+		prev.LThen = !filter.Sort.Reversed()
+	}
+
+	if hasNext {
+		next = s.collectOrderCursorValues(set[collected-1], filter.Sort...)
+		next.LThen = filter.Sort.Reversed()
+	}
+
+	return set, prev, next, nil
+}
+
+// QueryOrders queries the database, converts and checks each row and returns collected set
+//
+// With generics, we can remove this per-resource-generated function
+// and replace it with a single utility fetcher
+//
+// This function is auto-generated
+func (s *Store) QueryOrders(
+	ctx context.Context,
+	f systemType.OrderFilter,
+) (_ []*systemType.Order, more bool, err error) {
+	var (
+		ok bool
+
+		set         = make([]*systemType.Order, 0, DefaultSliceCapacity)
+		res         *systemType.Order
+		aux         *auxOrder
+		rows        *sql.Rows
+		count       uint
+		expr, tExpr []goqu.Expression
+
+		sortExpr []exp.OrderedExpression
+	)
+
+	if s.Filters.Order != nil {
+		// extended filter set
+		tExpr, f, err = s.Filters.Order(s, f)
+	} else {
+		// using generated filter
+		tExpr, f, err = OrderFilter(f)
+	}
+
+	if err != nil {
+		err = fmt.Errorf("could generate filter expression for Order: %w", err)
+		return
+	}
+
+	expr = append(expr, tExpr...)
+
+	// paging feature is enabled
+	if f.PageCursor != nil {
+		if tExpr, err = cursorWithSorting(f.PageCursor, s.sortableOrderFields()); err != nil {
+			return
+		} else {
+			expr = append(expr, tExpr...)
+		}
+	}
+
+	query := orderSelectQuery(s.Dialect.GOQU()).Where(expr...)
+
+	// sorting feature is enabled
+	if sortExpr, err = order(f.Sort, s.sortableOrderFields()); err != nil {
+		err = fmt.Errorf("could generate order expression for Order: %w", err)
+		return
+	}
+
+	if len(sortExpr) > 0 {
+		query = query.Order(sortExpr...)
+	}
+
+	if f.Limit > 0 {
+		query = query.Limit(f.Limit)
+	}
+
+	rows, err = s.Query(ctx, query)
+	if err != nil {
+		err = fmt.Errorf("could not query Order: %w", err)
+		return
+	}
+
+	if err = rows.Err(); err != nil {
+		err = fmt.Errorf("could not query Order: %w", err)
+		return
+	}
+
+	defer func() {
+		closeError := rows.Close()
+		if err == nil {
+			// return error from close
+			err = closeError
+		}
+	}()
+
+	for rows.Next() {
+		if err = rows.Err(); err != nil {
+			err = fmt.Errorf("could not query Order: %w", err)
+			return
+		}
+
+		aux = new(auxOrder)
+		if err = aux.scan(rows); err != nil {
+			err = fmt.Errorf("could not scan rows for Order: %w", err)
+			return
+		}
+
+		count++
+		if res, err = aux.decode(); err != nil {
+			err = fmt.Errorf("could not decode Order: %w", err)
+			return
+		}
+
+		// check fn set, call it and see if it passed the test
+		// if not, skip the item
+		if f.Check != nil {
+			if ok, err = f.Check(res); err != nil {
+				return
+			} else if !ok {
+				continue
+			}
+		}
+
+		set = append(set, res)
+	}
+
+	return set, f.Limit > 0 && count >= f.Limit, err
+
+}
+
+// LookupOrderByID searches for user by ID
+//
+// It returns user even if deleted or suspended
+//
+// This function is auto-generated
+func (s *Store) LookupOrderByID(ctx context.Context, id uint64) (_ *systemType.Order, err error) {
+	var (
+		rows   *sql.Rows
+		aux    = new(auxOrder)
+		lookup = orderSelectQuery(s.Dialect.GOQU()).Where(
+			goqu.I("id").Eq(id),
+		).Limit(1)
+	)
+
+	rows, err = s.Query(ctx, lookup)
+	if err != nil {
+		return
+	}
+
+	defer func() {
+		closeError := rows.Close()
+		if err == nil {
+			// return error from close
+			err = closeError
+		}
+	}()
+
+	if err = rows.Err(); err != nil {
+		return
+	}
+
+	if !rows.Next() {
+		return nil, store.ErrNotFound.Stack(1)
+	}
+
+	if err = aux.scan(rows); err != nil {
+		return
+	}
+
+	return aux.decode()
+}
+
+// LookupOrderByCode searches for user by email
+//
+// It returns only valid user (not deleted, not suspended)
+//
+// This function is auto-generated
+func (s *Store) LookupOrderByCode(ctx context.Context, code string) (_ *systemType.Order, err error) {
+	var (
+		rows   *sql.Rows
+		aux    = new(auxOrder)
+		lookup = orderSelectQuery(s.Dialect.GOQU()).Where(
+			s.Functions.LOWER(goqu.I("code")).Eq(strings.ToLower(code)),
+			goqu.I("deleted_at").IsNull(),
+		).Limit(1)
+	)
+
+	rows, err = s.Query(ctx, lookup)
+	if err != nil {
+		return
+	}
+
+	defer func() {
+		closeError := rows.Close()
+		if err == nil {
+			// return error from close
+			err = closeError
+		}
+	}()
+
+	if err = rows.Err(); err != nil {
+		return
+	}
+
+	if !rows.Next() {
+		return nil, store.ErrNotFound.Stack(1)
+	}
+
+	if err = aux.scan(rows); err != nil {
+		return
+	}
+
+	return aux.decode()
+}
+
+// sortableOrderFields returns all <no value> columns flagged as sortable
+//
+// With optional string arg, all columns are returned aliased
+//
+// This function is auto-generated
+func (Store) sortableOrderFields() map[string]string {
+	return map[string]string{
+		"code":       "code",
+		"created_at": "created_at",
+		"createdat":  "created_at",
+		"deleted_at": "deleted_at",
+		"deletedat":  "deleted_at",
+		"id":         "id",
+		"quantity":   "quantity",
+		"updated_at": "updated_at",
+		"updatedat":  "updated_at",
+	}
+}
+
+// collectOrderCursorValues collects values from the given resource that and sets them to the cursor
+// to be used for pagination
+//
+// Values that are collected must come from sortable, unique or primary columns/fields
+// At least one of the collected columns must be flagged as unique, otherwise fn appends primary keys at the end
+//
+// Known issue:
+//   when collecting cursor values for query that sorts by unique column with partial index (ie: unique handle on
+//   undeleted items)
+//
+// This function is auto-generated
+func (s *Store) collectOrderCursorValues(res *systemType.Order, cc ...*filter.SortExpr) *filter.PagingCursor {
+	var (
+		cur = &filter.PagingCursor{LThen: filter.SortExprSet(cc).Reversed()}
+
+		hasUnique bool
+
+		pkID bool
+
+		collect = func(cc ...*filter.SortExpr) {
+			getVal := func(col string) interface{} {
+				switch col {
+				case "id":
+					pkID = true
+					return res.ID
+				case "quantity":
+					return res.Quantity
+				case "code":
+					hasUnique = true
+					return res.Code
+				case "createdAt":
+					return res.CreatedAt
+				case "updatedAt":
+					return res.UpdatedAt
+				case "deletedAt":
+					return res.DeletedAt
+				}
+				return nil
+			}
+
+			for _, c := range cc {
+				switch c.Modifier() {
+				case filter.COALESCE:
+					var val interface{}
+					for _, col := range c.Columns() {
+						if reflect2.IsNil(val) {
+							val = getVal(col)
+						}
+					}
+					cur.SetModifier(c.Column, val, c.Descending, c.Modifier(), c.Columns()...)
+				default:
+					cur.Set(c.Column, getVal(c.Column), c.Descending)
+				}
+			}
+		}
+	)
+
+	_ = hasUnique
+
+	collect(cc...)
+	if !hasUnique || !pkID {
+		collect(&filter.SortExpr{Column: "id", Descending: false})
+	}
+
+	return cur
+
+}
+
+// checkOrderConstraints performs lookups (on valid) resource to check if any of the values on unique fields
+// already exists in the store
+//
+// Using built-in constraint checking would be more performant, but unfortunately we cannot rely
+// on the full support (MySQL does not support conditional indexes)
+//
+// This function is auto-generated
+func (s *Store) checkOrderConstraints(ctx context.Context, res *systemType.Order) (err error) {
+	err = func() (err error) {
+
+		// handling string type as default
+		if len(res.Code) == 0 {
+			// skip check on empty values
+			return nil
+		}
+
+		if res.DeletedAt != nil {
+			// skip check if value is not nil
+			return nil
+		}
+
+		ex, err := s.LookupOrderByCode(ctx, res.Code)
+		if err == nil && ex != nil && ex.ID != res.ID {
+			return store.ErrNotUnique.Stack(1)
+		} else if !errors.IsNotFound(err) {
+			return err
+		}
+
+		return nil
+	}()
+
+	if err != nil {
+		return
+	}
+
 	return nil
 }
 

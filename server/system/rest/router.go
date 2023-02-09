@@ -30,6 +30,7 @@ func MountRoutes() func(r chi.Router) {
 
 			handlers.NewAuthClient(AuthClient{}.New()).MountRoutes(r)
 			handlers.NewAutomation(Automation{}.New()).MountRoutes(r)
+			handlers.NewBakery(Bakery{}.New()).MountRoutes(r)
 			handlers.NewUser(User{}.New()).MountRoutes(r)
 			handlers.NewDalConnection(DalConnection{}.New()).MountRoutes(r)
 			handlers.NewDalSensitivityLevel(SensitivityLevel{}.New()).MountRoutes(r)

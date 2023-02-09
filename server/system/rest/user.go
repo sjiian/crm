@@ -135,6 +135,10 @@ func (ctrl User) List(ctx context.Context, r *request.UserList) (interface{}, er
 	return ctrl.makeFilterPayload(ctx, set, f, err)
 }
 
+func (ctrl User) Promote(ctx context.Context, r *request.UserPromote) (interface{}, error) {
+	return api.OK(), ctrl.user.Promote(ctx, r.UserID, r.RoleID)
+}
+
 func (ctrl User) Create(ctx context.Context, r *request.UserCreate) (interface{}, error) {
 	user := &types.User{
 		Email:  r.Email,

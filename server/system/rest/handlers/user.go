@@ -19,6 +19,7 @@ import (
 type (
 	// Internal API interface
 	UserAPI interface {
+		Promote(context.Context, *request.UserPromote) (interface{}, error)
 		List(context.Context, *request.UserList) (interface{}, error)
 		Create(context.Context, *request.UserCreate) (interface{}, error)
 		Update(context.Context, *request.UserUpdate) (interface{}, error)
@@ -42,6 +43,7 @@ type (
 
 	// HTTP API interface
 	User struct {
+		Promote           func(http.ResponseWriter, *http.Request)
 		List              func(http.ResponseWriter, *http.Request)
 		Create            func(http.ResponseWriter, *http.Request)
 		Update            func(http.ResponseWriter, *http.Request)
@@ -66,6 +68,22 @@ type (
 
 func NewUser(h UserAPI) *User {
 	return &User{
+		Promote: func(w http.ResponseWriter, r *http.Request) {
+			defer r.Body.Close()
+			params := request.NewUserPromote()
+			if err := params.Fill(r); err != nil {
+				api.Send(w, r, err)
+				return
+			}
+
+			value, err := h.Promote(r.Context(), params)
+			if err != nil {
+				api.Send(w, r, err)
+				return
+			}
+
+			api.Send(w, r, value)
+		},
 		List: func(w http.ResponseWriter, r *http.Request) {
 			defer r.Body.Close()
 			params := request.NewUserList()
@@ -376,6 +394,7 @@ func NewUser(h UserAPI) *User {
 func (h User) MountRoutes(r chi.Router, middlewares ...func(http.Handler) http.Handler) {
 	r.Group(func(r chi.Router) {
 		r.Use(middlewares...)
+		r.Post("/users/{userID}/promote", h.Promote)
 		r.Get("/users/", h.List)
 		r.Post("/users/", h.Create)
 		r.Put("/users/{userID}", h.Update)

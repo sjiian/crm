@@ -74,6 +74,7 @@ type (
 		FederationSharedModules
 		Flags
 		Labels
+		Orders
 		Queues
 		QueueMessages
 		RbacRules
@@ -474,6 +475,19 @@ type (
 		TruncateLabels(ctx context.Context) error
 		LookupLabelByKindResourceIDName(ctx context.Context, kind string, resourceID uint64, name string) (*labelsType.Label, error)
 		DeleteExtraLabels(ctx context.Context, kind string, resourceId uint64, name ...string) error
+	}
+
+	Orders interface {
+		SearchOrders(ctx context.Context, f systemType.OrderFilter) (systemType.OrderSet, systemType.OrderFilter, error)
+		CreateOrder(ctx context.Context, rr ...*systemType.Order) error
+		UpdateOrder(ctx context.Context, rr ...*systemType.Order) error
+		UpsertOrder(ctx context.Context, rr ...*systemType.Order) error
+		DeleteOrder(ctx context.Context, rr ...*systemType.Order) error
+
+		DeleteOrderByID(ctx context.Context, id uint64) error
+		TruncateOrders(ctx context.Context) error
+		LookupOrderByID(ctx context.Context, id uint64) (*systemType.Order, error)
+		LookupOrderByCode(ctx context.Context, code string) (*systemType.Order, error)
 	}
 
 	Queues interface {
@@ -2555,6 +2569,73 @@ func LookupLabelByKindResourceIDName(ctx context.Context, s Labels, kind string,
 // This function is auto-generated
 func DeleteExtraLabels(ctx context.Context, s Labels, kind string, resourceId uint64, name ...string) error {
 	return s.DeleteExtraLabels(ctx, kind, resourceId, name...)
+}
+
+// SearchOrders returns all matching Orders from store
+//
+// This function is auto-generated
+func SearchOrders(ctx context.Context, s Orders, f systemType.OrderFilter) (systemType.OrderSet, systemType.OrderFilter, error) {
+	return s.SearchOrders(ctx, f)
+}
+
+// CreateOrder creates one or more Orders in store
+//
+// This function is auto-generated
+func CreateOrder(ctx context.Context, s Orders, rr ...*systemType.Order) error {
+	return s.CreateOrder(ctx, rr...)
+}
+
+// UpdateOrder updates one or more (existing) Orders in store
+//
+// This function is auto-generated
+func UpdateOrder(ctx context.Context, s Orders, rr ...*systemType.Order) error {
+	return s.UpdateOrder(ctx, rr...)
+}
+
+// UpsertOrder creates new or updates existing one or more Orders in store
+//
+// This function is auto-generated
+func UpsertOrder(ctx context.Context, s Orders, rr ...*systemType.Order) error {
+	return s.UpsertOrder(ctx, rr...)
+}
+
+// DeleteOrder deletes one or more Orders from store
+//
+// This function is auto-generated
+func DeleteOrder(ctx context.Context, s Orders, rr ...*systemType.Order) error {
+	return s.DeleteOrder(ctx, rr...)
+}
+
+// DeleteOrderByID deletes one or more Orders from store
+//
+// This function is auto-generated
+func DeleteOrderByID(ctx context.Context, s Orders, id uint64) error {
+	return s.DeleteOrderByID(ctx, id)
+}
+
+// TruncateOrders Deletes all Orders from store
+//
+// This function is auto-generated
+func TruncateOrders(ctx context.Context, s Orders) error {
+	return s.TruncateOrders(ctx)
+}
+
+// LookupOrderByID searches for user by ID
+//
+// It returns user even if deleted or suspended
+//
+// This function is auto-generated
+func LookupOrderByID(ctx context.Context, s Orders, id uint64) (*systemType.Order, error) {
+	return s.LookupOrderByID(ctx, id)
+}
+
+// LookupOrderByCode searches for user by email
+//
+// It returns only valid user (not deleted, not suspended)
+//
+// This function is auto-generated
+func LookupOrderByCode(ctx context.Context, s Orders, code string) (*systemType.Order, error) {
+	return s.LookupOrderByCode(ctx, code)
 }
 
 // SearchQueues returns all matching Queues from store
