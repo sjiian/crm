@@ -15731,6 +15731,7 @@ func (s *Store) LookupOrderByCode(ctx context.Context, code string) (_ *systemTy
 func (Store) sortableOrderFields() map[string]string {
 	return map[string]string{
 		"code":       "code",
+		"comment":    "comment",
 		"created_at": "created_at",
 		"createdat":  "created_at",
 		"deleted_at": "deleted_at",
@@ -15772,6 +15773,9 @@ func (s *Store) collectOrderCursorValues(res *systemType.Order, cc ...*filter.So
 				case "code":
 					hasUnique = true
 					return res.Code
+				case "comment":
+					hasUnique = true
+					return res.Comment
 				case "createdAt":
 					return res.CreatedAt
 				case "updatedAt":

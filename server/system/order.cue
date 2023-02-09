@@ -19,6 +19,12 @@ order: {
 		  	ignoreCase: true
 				dal: {}
 			}
+			comment: {
+		  	sortable: true,
+		  	unique: true,
+		  	ignoreCase: true
+				dal: {}
+			}
 		  created_at: schema.SortableTimestampNowField
 		  updated_at: schema.SortableTimestampNilField
 		  deleted_at: schema.SortableTimestampNilField

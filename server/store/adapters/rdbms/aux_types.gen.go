@@ -469,6 +469,7 @@ type (
 		ID        uint64     `db:"id"`
 		Quantity  int        `db:"quantity"`
 		Code      string     `db:"code"`
+		Comment   string     `db:"comment"`
 		CreatedAt time.Time  `db:"created_at"`
 		UpdatedAt *time.Time `db:"updated_at"`
 		DeletedAt *time.Time `db:"deleted_at"`
@@ -2288,6 +2289,7 @@ func (aux *auxOrder) encode(res *systemType.Order) (_ error) {
 	aux.ID = res.ID
 	aux.Quantity = res.Quantity
 	aux.Code = res.Code
+	aux.Comment = res.Comment
 	aux.CreatedAt = res.CreatedAt
 	aux.UpdatedAt = res.UpdatedAt
 	aux.DeletedAt = res.DeletedAt
@@ -2302,6 +2304,7 @@ func (aux auxOrder) decode() (res *systemType.Order, _ error) {
 	res.ID = aux.ID
 	res.Quantity = aux.Quantity
 	res.Code = aux.Code
+	res.Comment = aux.Comment
 	res.CreatedAt = aux.CreatedAt
 	res.UpdatedAt = aux.UpdatedAt
 	res.DeletedAt = aux.DeletedAt
@@ -2316,6 +2319,7 @@ func (aux *auxOrder) scan(row scanner) error {
 		&aux.ID,
 		&aux.Quantity,
 		&aux.Code,
+		&aux.Comment,
 		&aux.CreatedAt,
 		&aux.UpdatedAt,
 		&aux.DeletedAt,

@@ -1485,6 +1485,12 @@ var Order = &dal.Model{
 		},
 
 		&dal.Attribute{
+			Ident: "Comment", Sortable: true,
+			Type:  &dal.TypeText{},
+			Store: &dal.CodecAlias{Ident: "comment"},
+		},
+
+		&dal.Attribute{
 			Ident: "CreatedAt", Sortable: true,
 			Type: &dal.TypeTimestamp{
 				DefaultCurrentTimestamp: true, Timezone: true, Precision: -1,

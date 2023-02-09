@@ -5,6 +5,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/cortezaproject/corteza/server/compose/model"
 	"github.com/cortezaproject/corteza/server/compose/types"
 	"github.com/cortezaproject/corteza/server/pkg/dal"
@@ -12,13 +16,11 @@ import (
 	"github.com/cortezaproject/corteza/server/pkg/filter"
 	labelsType "github.com/cortezaproject/corteza/server/pkg/label/types"
 	"github.com/cortezaproject/corteza/server/store"
+	systemModel "github.com/cortezaproject/corteza/server/system/model"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/doug-martin/goqu/v9/exp"
 	"github.com/spf13/cast"
 	"go.uber.org/zap"
-	"os"
-	"strings"
-	"time"
 )
 
 // RDBMS database fixes
@@ -43,6 +45,7 @@ var (
 		fix_2022_09_00_addMetaOnComposeRecords,
 		fix_2022_09_00_addMissingNodeIdOnFederationMapping,
 		fix_2022_09_07_changePostgresIdColumnsDatatype,
+		fix_xyz_addCommentOnOrder,
 	}
 )
 
@@ -421,6 +424,14 @@ func fix_2022_09_00_addMetaOnComposeRecords(ctx context.Context, s *Store) (err 
 		return
 
 	})
+}
+
+func fix_xyz_addCommentOnOrder(ctx context.Context, s *Store) (err error) {
+	err = addColumn(ctx, s,
+		"orders",
+		systemModel.Order.Attributes.FindByIdent("Comment"),
+	)
+	return err
 }
 
 func fix_2022_09_00_addMissingNodeIdOnFederationMapping(ctx context.Context, s *Store) (err error) {

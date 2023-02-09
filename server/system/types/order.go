@@ -11,6 +11,7 @@ type (
 		ID       uint64 `json:"orderID,string"`
 		Quantity int    `json:"quantity"`
 		Code     string `json:"code"`
+		Comment  string `json:"code"`
 
 		CreatedAt time.Time  `json:"createdAt,omitempty"`
 		UpdatedAt *time.Time `json:"updatedAt,omitempty"`

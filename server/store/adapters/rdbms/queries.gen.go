@@ -3355,6 +3355,7 @@ var (
 			"id",
 			"quantity",
 			"code",
+			"comment",
 			"created_at",
 			"updated_at",
 			"deleted_at",
@@ -3370,6 +3371,7 @@ var (
 				"id":         res.ID,
 				"quantity":   res.Quantity,
 				"code":       res.Code,
+				"comment":    res.Comment,
 				"created_at": res.CreatedAt,
 				"updated_at": res.UpdatedAt,
 				"deleted_at": res.DeletedAt,
@@ -3388,6 +3390,7 @@ var (
 					goqu.Record{
 						"quantity":   res.Quantity,
 						"code":       res.Code,
+						"comment":    res.Comment,
 						"created_at": res.CreatedAt,
 						"updated_at": res.UpdatedAt,
 						"deleted_at": res.DeletedAt,
@@ -3404,6 +3407,7 @@ var (
 			Set(goqu.Record{
 				"quantity":   res.Quantity,
 				"code":       res.Code,
+				"comment":    res.Comment,
 				"created_at": res.CreatedAt,
 				"updated_at": res.UpdatedAt,
 				"deleted_at": res.DeletedAt,
