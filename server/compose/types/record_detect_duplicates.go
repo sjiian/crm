@@ -3,10 +3,11 @@ package types
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/cortezaproject/corteza/server/pkg/locale"
 	"github.com/cortezaproject/corteza/server/pkg/str"
 	"github.com/spf13/cast"
-	"strings"
 )
 
 type (
@@ -214,6 +215,47 @@ func (v *RecordValueErrorSet) SetMetaID(id uint64) {
 
 func (v *RecordValueErrorSet) HasStrictErrors() bool {
 	return v.HasKind(deDupError.String())
+}
+
+func (v *RecordValueErrorSet) OmitDeDup() *RecordValueErrorSet {
+	if v == nil {
+		return nil
+	}
+
+	out := &RecordValueErrorSet{}
+	kk := []string{deDupError.String(), deDupWarning.String()}
+
+outer:
+	for _, err := range v.Set {
+		for _, k := range kk {
+			if err.Kind == k {
+				continue outer
+			}
+		}
+		out.Push(err)
+	}
+
+	return out
+}
+
+func (v *RecordValueErrorSet) DeDup() *RecordValueErrorSet {
+	if v == nil {
+		return nil
+	}
+
+	out := &RecordValueErrorSet{}
+	kk := []string{deDupError.String(), deDupWarning.String()}
+
+	for _, err := range v.Set {
+		for _, k := range kk {
+			if err.Kind == k {
+				out.Push(err)
+				break
+			}
+		}
+	}
+
+	return out
 }
 
 // distinct only list the different (distinct) values

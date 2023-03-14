@@ -142,7 +142,9 @@ func (vldtr validator) Run(ctx context.Context, s store.Storer, m *types.Module,
 
 fields:
 	for _, f := range m.Fields {
-		vv := r.Values.FilterByName(f.Name)
+		vv := r.Values.
+			FilterByName(f.Name).
+			OmitEmpty()
 
 		if f.Required {
 			if len(vv) == 0 {
@@ -189,7 +191,7 @@ fields:
 		if !(f.Expressions.DisableDefaultValidators && len(f.Expressions.Validators) > 0) {
 			if v.Value == "" {
 				// Nothing to do with empty value
-				return nil
+				continue
 			}
 
 			// Per field type validators

@@ -32,7 +32,7 @@ import (
 
 type (
 	recordBulkPatchRecord struct {
-		Record      *types.Record              `json:"record"`
+		Record      *types.Record              `json:"record,omitempty"`
 		Error       error                      `json:"error,omitempty"`
 		ValueErrors *types.RecordValueErrorSet `json:"valueErrors,omitempty"`
 	}
@@ -225,7 +225,7 @@ func (ctrl *Record) Create(ctx context.Context, r *request.RecordCreate) (interf
 
 	for _, r := range results {
 		rr = append(rr, r.Record)
-		dd.Merge(r.DuplicationError)
+		dd.Merge(r.ValueError.DeDup())
 	}
 
 	return ctrl.makeBulkPayload(ctx, m, dd, err, rr...)
@@ -256,10 +256,6 @@ func (ctrl *Record) Patch(ctx context.Context, req *request.RecordPatch) (interf
 	}
 
 	results, err := ctrl.record.Bulk(ctx, true, oo...)
-	if rve := types.IsRecordValueErrorSet(err); rve != nil {
-		return ctrl.handleValidationError(rve), nil
-	}
-
 	return ctrl.makeRecordBulkPatchPayload(ctx, results, err)
 }
 
@@ -317,7 +313,7 @@ func (ctrl *Record) Update(ctx context.Context, r *request.RecordUpdate) (interf
 
 	for _, r := range results {
 		rr = append(rr, r.Record)
-		dd.Merge(r.DuplicationError)
+		dd.Merge(r.ValueError.DeDup())
 	}
 
 	return ctrl.makeBulkPayload(ctx, m, dd, err, rr...)
@@ -708,7 +704,6 @@ func (ctrl Record) makeRecordBulkPatchPayload(ctx context.Context, rr []types.Re
 
 	for _, r := range rr {
 		vr := r.ValueError
-		vr.Merge(r.DuplicationError)
 		out.Records = append(out.Records, recordBulkPatchRecord{
 			Record:      r.Record,
 			ValueErrors: vr,

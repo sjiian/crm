@@ -29,10 +29,9 @@ type (
 		ID        string
 	}
 	RecordBulkOperationResult struct {
-		Record           *Record
-		Error            error
-		ValueError       *RecordValueErrorSet
-		DuplicationError *RecordValueErrorSet
+		Record     *Record
+		Error      error
+		ValueError *RecordValueErrorSet
 	}
 
 	RecordBulk struct {

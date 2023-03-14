@@ -635,17 +635,24 @@ func (svc record) Bulk(ctx context.Context, skipFailed bool, oo ...*types.Record
 				r, dupErrors, err = svc.patch(ctx, r, r.Values)
 			}
 
+			// Update the record with the most up to date version
+			rr[i].Record = r
 			aProp.setChanged(r)
 
 			// Attach meta ID to each value error for FE identification
 			if !dupErrors.HasStrictErrors() && r != nil {
 				dupErrors.SetMetaID(r.ID)
 			}
-			rr[i].DuplicationError = dupErrors
+			rr[i].ValueError = dupErrors
 
 			if rve := types.IsRecordValueErrorSet(err); rve != nil {
-				if valueErrors == nil {
-					valueErrors = &types.RecordValueErrorSet{}
+				// DeDup errors are already handled.
+				// In case we hard-stop the op. the same validation errors are returned
+				// as err which would duplicate the errors here.
+				rve = rve.OmitDeDup()
+
+				if rr[i].ValueError == nil {
+					rr[i].ValueError = &types.RecordValueErrorSet{}
 				}
 
 				// Attach additional meta to each value error for FE identification
@@ -654,13 +661,11 @@ func (svc record) Bulk(ctx context.Context, skipFailed bool, oo ...*types.Record
 						re.Meta["id"] = p.ID
 					}
 
-					valueErrors.Push(re)
+					rr[i].ValueError.Push(re)
 				}
 
 				// log record value error for this record
 				_ = svc.recordAction(ctx, aProp, action, err)
-
-				rr[i].ValueError = valueErrors
 
 				// Clear the current error
 				err = nil
@@ -687,9 +692,6 @@ func (svc record) Bulk(ctx context.Context, skipFailed bool, oo ...*types.Record
 		for _, r := range rr {
 			if !r.ValueError.IsValid() {
 				ee.Merge(r.ValueError)
-			}
-			if r.DuplicationError.HasStrictErrors() {
-				ee.Merge(r.DuplicationError)
 			}
 		}
 		if !skipFailed && !ee.IsValid() {

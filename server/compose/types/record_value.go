@@ -4,10 +4,11 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"github.com/cortezaproject/corteza/server/pkg/sql"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/cortezaproject/corteza/server/pkg/sql"
 
 	"github.com/cortezaproject/corteza/server/pkg/expr"
 	"github.com/cortezaproject/corteza/server/pkg/filter"
@@ -102,6 +103,16 @@ func (set RecordValueSet) Clone() (vv RecordValueSet) {
 func (set RecordValueSet) FilterByName(name string) (vv RecordValueSet) {
 	for i := range set {
 		if set[i].Name == name {
+			vv = append(vv, set[i])
+		}
+	}
+
+	return
+}
+
+func (set RecordValueSet) OmitEmpty() (vv RecordValueSet) {
+	for i := range set {
+		if set[i].Value != "" {
 			vv = append(vv, set[i])
 		}
 	}
