@@ -8,7 +8,7 @@ const props = {
   disabled: false,
   optional: false,
   small: false,
-  stepNumber: '111',
+  stepNumber: '1',
 }
 
 export default {

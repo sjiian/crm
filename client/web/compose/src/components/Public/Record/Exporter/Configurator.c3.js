@@ -4,25 +4,22 @@ import { compose } from '@cortezaproject/corteza-js'
 import { components } from '@cortezaproject/corteza-vue'
 const { checkbox, select } = components.C3.controls
 
-// errors to fix
 const props = {
   allowJSON: true,
   allowCSV: true,
   module: new compose.Module(),
   preselectedFields: [],
-  recordCount: 5,
   query: undefined,
-  // selection: [],
   filterRangeType: 'all',
-  filterRangeBy: 'createdAt',
+  filterRangeBy: 'created_at',
   dateRange: 'lastMonth',
   startDate: null,
   endDate: null,
   systemFields: ['ownedBy', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'],
   disabledTypes: ['User', 'Record', 'File'],
   processingCount: false,
-  rangeRecordCount: 5,
   selectedFields: [],
+  processing: false,
 }
 
 export default {
@@ -33,8 +30,8 @@ export default {
   controls: [
     checkbox('Allow JSON', 'allowJSON'),
     checkbox('Allow CSV', 'allowCSV'),
-    select('Module', 'module', [{ value: new compose.Module(), text: 'new compose.Module()' }, undefined]),
-    select('Filter range by', 'filterRangeBy', [{ value: 'created_at', text: 'created_at' }, { value: 'deleted_at', text: 'deleted_at' }]),
+    checkbox('Processing', 'processing'),
+    select('Filter range by', 'filterRangeBy', [{ value: 'created_at', text: 'created_at' }, { value: 'deleted_at', text: 'deleted_at' }, undefined]),
   ],
   scenarios: [
     {
@@ -52,9 +49,9 @@ export default {
         selection: [],
         filterRangeBy: '',
         filterRangeType: '',
-        dateRange: '',
         systemFields: [],
         disabledTypes: [],
+        processing: false,
       },
     },
   ],

@@ -2,6 +2,7 @@
   <b-form-group>
     <b-form-checkbox
       :checked="value"
+      switch
       @change="$emit('update', $event)"
     >
       {{ label }}

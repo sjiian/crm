@@ -1,8 +1,9 @@
 import component from './CTranslatorForm.vue'
-// import { components } from '@cortezaproject/corteza-vue'
-// const { checkbox } = components.C3.controls
+import { components } from '@cortezaproject/corteza-vue'
+const { select } = components.C3.controls
 
 const props = {
+  // passed but not used
   // disabled: false,
 
   languages: [
@@ -31,8 +32,21 @@ const props = {
     { key: 'contact', lang: 'it', message: 'Contatto', resource: 'compose:page/291598304267993189/291598304588464229' },
   ],
 
-  highlightKey: '',
+  // Passed to modal; won't be shown
+  // titles: {
+  //   'compose:page/291598304267993189/291598304588464229': "Page"
+  // },
+
+  highlightKey: 'title',
 }
+
+const translations = [
+  { value: '', text: 'None' },
+  { value: 'title', text: 'Title' },
+  { value: 'description', text: 'Description' },
+  { value: 'name', text: 'Name' },
+  { value: 'contact', text: 'Contact' },
+]
 
 export default {
   name: 'Form',
@@ -40,6 +54,23 @@ export default {
   component,
   props,
   controls: [
-    // checkbox('Disabled', 'disabled'),
+    select('Highlighted key', 'highlightKey', translations),
+  ],
+  scenarios: [
+    {
+      label: 'Full form',
+      props,
+    },
+    {
+      label: 'Empty form',
+      props: {
+        ...props,
+        // nested values don;t get overwritten 
+        // languages: [],
+        // nested values don;t get overwritten
+        // translations: [],
+        highlightKey: '',
+      },
+    },
   ],
 }

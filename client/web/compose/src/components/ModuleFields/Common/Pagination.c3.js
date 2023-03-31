@@ -15,7 +15,7 @@ export default {
   props,
   controls: [
     checkbox('Enable previous page', 'hasPrevPage'),
-    checkbox('Enable pext Page', 'hasNextPage'),
+    checkbox('Enable next page', 'hasNextPage'),
   ],
 
   scenarios: [
