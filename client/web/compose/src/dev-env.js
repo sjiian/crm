@@ -7,6 +7,8 @@ import './mixins'
 
 import './components'
 import './themes'
+import './plugins'
+import store from './store'
 
 const routes = [
   {
@@ -24,14 +26,18 @@ Vue.use(BootstrapVue)
 export default new Vue({
   el: '#app',
   name: 'DevEnv',
+
   async created () {
     document.body.setAttribute('dir', this.textDirectionality())
   },
+
   template: '<router-view/>',
   router: new Router({
     mode: 'history',
     routes,
   }),
+  store,
+
   i18n: i18n(Vue,
     { app: 'corteza-webapp-compose' },
     'block',
