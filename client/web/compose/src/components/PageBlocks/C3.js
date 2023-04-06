@@ -1,6 +1,27 @@
 import { compose } from '@cortezaproject/corteza-js'
 import PageBlockFactory from './index.js'
 
+const namespace = {
+  namespaceID: '328382521157025895',
+  name: 'CRM',
+  slug: 'crm',
+  enabled: true,
+  labels: {
+  },
+  meta: {
+    iconID: '0',
+    logoID: '0',
+  },
+  createdAt: 'Thu Mar 16 2023 11:47:15 GMT+0200 (Eastern European Standard Time)',
+  canCloneNamespace: true,
+  canCreateChart: true,
+  canCreateModule: true,
+  canCreatePage: true,
+  canDeleteNamespace: true,
+  canGrant: true,
+  canManageNamespace: true,
+  canUpdateNamespace: true,
+}
 const options = {
   Automation: {
     buttons: [
@@ -62,7 +83,7 @@ export const pageBlockConfigurators = Object.fromEntries([
     props: {
       block,
       mode: 'configurator',
-      namespace: new compose.Namespace(),
+      namespace,
       module,
       page: new compose.Page(),
       record: new compose.Record(module),
@@ -106,7 +127,7 @@ export const pageBlockBase = Object.fromEntries([
     controls: [],
     props: {
       block,
-      namespace: new compose.Namespace(),
+      namespace,
       module,
       page: new compose.Page(),
       record: new compose.Record(module),

@@ -65,7 +65,7 @@ export default {
       label: 'Empty form',
       props: {
         ...props,
-        // nested values don;t get overwritten 
+        // nested values don;t get overwritten
         // languages: [],
         // nested values don;t get overwritten
         // translations: [],
