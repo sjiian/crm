@@ -3,7 +3,7 @@
 // This is a generated file.
 // See README.md file for update instructions
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios'
 
 interface KV {
   [header: string]: unknown;
@@ -40,6 +40,8 @@ export default class Compose {
   protected baseURL?: string;
   protected accessTokenFn?: () => (string | undefined);
   protected headers: Headers = {};
+  protected controller: AbortController = new AbortController();
+  protected cancelTokenSource: CancelTokenSource = axios.CancelToken.source();
 
   constructor ({ baseURL, headers, accessTokenFn }: Ctor) {
     this.baseURL = baseURL
@@ -88,6 +90,7 @@ export default class Compose {
       withCredentials: true,
       baseURL: this.baseURL,
       headers,
+      signal: this.controller.signal,
     })
   }
 
@@ -1822,6 +1825,8 @@ export default class Compose {
       url: this.recordListEndpoint({
         namespaceID, moduleID,
       }),
+      signal: this.controller.signal,
+      cancelToken: this.cancelTokenSource.token,
     }
     cfg.params = {
       query,

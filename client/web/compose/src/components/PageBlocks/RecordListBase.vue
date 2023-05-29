@@ -1533,7 +1533,7 @@ export default {
       // Filter's out deleted records when filter.deleted is 2, and undeleted records when filter.deleted is 0
       this.showingDeletedRecords ? this.filter.deleted = 2 : this.filter.deleted = 0
 
-      await this.$ComposeAPI.recordList({ ...this.filter, moduleID, namespaceID, query, ...paginationOptions })
+      this.$ComposeAPI.recordList({ ...this.filter, moduleID, namespaceID, query, ...paginationOptions })
         .then(({ set, filter }) => {
           const records = set.map(r => new compose.Record(r, this.recordListModule))
 
@@ -1583,6 +1583,11 @@ export default {
         .finally(() => {
           this.processing = false
         })
+
+      console.log(this.$ComposeAPI.controller, 'here')
+
+      this.$ComposeAPI.controller.abort()
+      this.$ComposeAPI.cancelTokenSource.cancel('Foo')
     },
 
     getStorageRecordListFilter () {
