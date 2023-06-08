@@ -144,6 +144,7 @@
           <b-dropdown-item
             v-if="m.canGrant"
             link-class="p-0"
+            variant="light"
           >
             <c-permissions-button
               :title="m.name || m.handle || m.moduleID"
