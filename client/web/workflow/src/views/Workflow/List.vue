@@ -182,9 +182,7 @@
               :icon="['far', 'trash-alt']"
               class="text-danger"
             />
-            <span
-              class="p-1"
-            >
+            <span>
               {{ $t('delete') }}
             </span>
           </c-input-confirm>
@@ -202,9 +200,7 @@
               :icon="['far', 'trash-alt']"
               class="text-danger"
             />
-            <span
-              class="p-1"
-            >
+            <span>
               {{ $t('undelete') }}
             </span>
           </c-input-confirm>

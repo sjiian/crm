@@ -82,17 +82,11 @@
               :icon="['far', 'trash-alt']"
               class="text-danger"
             />
-            <span
-              v-if="!s.deletedAt"
-              class="p-1"
-            >
+            <span v-if="!s.deletedAt">
               {{ $t('delete') }}
             </span>
 
-            <span
-              v-else
-              class="p-1"
-            >
+            <span v-else>
               {{ $t('undelete') }}
             </span>
           </c-input-confirm>
