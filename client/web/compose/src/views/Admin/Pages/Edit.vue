@@ -707,7 +707,7 @@
           {{ $t('general:label.cancel') }}
         </b-button>
         <b-button
-          :disabled="selectedAttachmentID"
+          :disabled="attachments && !selectedAttachmentID"
           variant="danger"
           @click="deleteIcon"
         >
@@ -1299,10 +1299,13 @@ export default {
     },
 
     deleteIcon () {
-      if (this.selectedAttachmentID) {
-        // study altered logic
-        // pass ID or whatever BE needs to del icon
-      }
+    // this.attachments = this.attachments.filter(a => a.attachmentID !== this.selectedAttachmentID)
+      // this.$ComposeAPI.?
+      // .then((attachments) => {
+        // either api will return updated list of attachments or you'll have to refetch
+        // this.attachments = attachments
+        // this.fetchAttachments()
+      // }).catch(this.toastErrorHandler(this.$t('notification:page.iconUndeleteFailed')))
     },
   },
 }
