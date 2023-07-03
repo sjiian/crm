@@ -65,7 +65,7 @@ jobs:
       RELEASE_SFTP_KEY: ${{ secrets.RELEASE_SFTP_KEY }}
       RELEASE_SFTP_URI: ${{ secrets.RELEASE_SFTP_URI }}
     steps:
-      - run: echo "BUILD_VERSION=${github.ref}" >> $GITHUB_ENV
+      - run: echo "BUILD_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with: { go-version: "${{ env.GO_VERSION }}" }
@@ -103,7 +103,7 @@ jobs:
       RELEASE_SFTP_KEY: ${{ secrets.RELEASE_SFTP_KEY }}
       RELEASE_SFTP_URI: ${{ secrets.RELEASE_SFTP_URI }}
     steps:
-      - run: echo "BUILD_VERSION=${github.ref}" >> $GITHUB_ENV
+      - run: echo "BUILD_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - name: "Download"
         run: |
@@ -147,7 +147,7 @@ jobs:
       - name: "Parse version tag"
         id: version
         run: |
-          TAG=${github.ref}
+          TAG=${GITHUB_REF##*/}
 
           echo "DOCKER_IMAGE_TAG=${TAG}" >> $GITHUB_ENV
       - name: "Build"
