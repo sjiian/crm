@@ -154,7 +154,7 @@ jobs:
         run: |
           docker build \
             --build-arg "VERSION=${{ env.DOCKER_IMAGE_TAG }}" \
-            --tag ${{ matrix.image }}:${{ env.DOCKER_IMAGE_TAG }} \
+            --tag ghcr.io/${{ matrix.image }}:${{ env.DOCKER_IMAGE_TAG }} \
             ${{ matrix.context }}
 
       - name: "Login"
