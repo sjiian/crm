@@ -361,8 +361,8 @@ export default {
       return title || kind
     },
 
-    getOptionKey ({ blockID }) {
-      return blockID
+    getOptionKey (block) {
+      return fetchID(block)
     },
 
     setDefaultValues () {
