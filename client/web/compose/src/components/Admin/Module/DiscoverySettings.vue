@@ -143,7 +143,7 @@ export default {
             this.languages.forEach(({ tag: lang }) => {
               let existingFields = new Set()
 
-              if (this.module.config.discovery && this.module.config.discovery[value]) {
+              if (this.module.config.discovery && this.module.config.discovery[value].result) {
                 const indexOfLanguage = this.module.config.discovery[value].result.findIndex(r => r.lang === lang)
                 if (indexOfLanguage >= 0) {
                   existingFields = new Set(this.module.config.discovery[value].result[indexOfLanguage].fields.filter(name => this.moduleFields.has(name)))
