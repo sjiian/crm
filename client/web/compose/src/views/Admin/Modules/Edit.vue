@@ -543,6 +543,10 @@ export default {
       return this.$route.name === 'admin.modules.edit' ? this.$t('edit.edit') : this.$t('edit.create')
     },
 
+    isNew () {
+      return this.moduleID === NoID
+    },
+
     trModule: {
       get () {
         if (!this.module) {
@@ -728,7 +732,11 @@ export default {
     }),
 
     checkUnsavedModule (next) {
-      next(!isEqual(this.module.clone(), this.initialModuleState.clone()) ? window.confirm(this.$t('general.unsavedChanges')) : true)
+      if (this.isNew) {
+        next(true)
+      } else {
+        next(!isEqual(this.module.clone(), this.initialModuleState.clone()) ? window.confirm(this.$t('general.unsavedChanges')) : true)
+      }
     },
 
     handleNewField () {
