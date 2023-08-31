@@ -35,13 +35,48 @@
       <b-tab
         v-for="(tab, index) in tabbedBlocks"
         :key="`${getTabTitle(tab, index)}-${index}`"
-        :title="getTabTitle(tab, index)"
         class="h-100"
         :title-item-class="getTitleItemClass(index)"
         :title-link-class="getTitleItemClass(index)"
         no-body
         :lazy="isTabLazy(tab)"
       >
+        <template #title>
+          <template v-if="editable">
+            <b-button
+              :variant="block.options.style.appearance === 'pills' ? 'secondary' : 'primary'"
+              size="sm"
+              class="tab-menu-item-tool d-inline-flex justify-content-center align-items-center mr-1 "
+              pill
+              style="left: 5px;"
+              @click="onTabMenuEditItemClick(tab)"
+            >
+              <font-awesome-icon
+                :icon="['far', 'edit']"
+                style="height: 9px;"
+              />
+            </b-button>
+
+            <b-button
+              variant="danger"
+              size="sm"
+              class="tab-menu-item-tool d-inline-flex justify-content-center align-items-center mr-5"
+              pill
+              style="left: 28px;"
+              @click="onTabMenuDeleteItemClick(index)"
+            >
+              <font-awesome-icon
+                :icon="['far', 'trash-alt']"
+                style="height: 9px;"
+              />
+            </b-button>
+          </template>
+
+          <span>
+            {{ getTabTitle(tab, index) }}
+          </span>
+        </template>
+
         <page-block-tab
           v-if="tab.block"
           v-bind="{ ...$attrs, ...$props, page, block: tab.block, blockIndex: index, boundingRect: { xywh: block.xywh} }"
@@ -129,9 +164,20 @@ export default {
   },
 
   methods: {
+    onTabMenuEditItemClick (tab) {
+      const blockIndex = this.blocks.findIndex(block => fetchID(block) === tab.block.blockID)
+      if (blockIndex > -1) {
+        this.$emit('edit-tab-item-block', blockIndex)
+      }
+    },
+
+    onTabMenuDeleteItemClick (tabIndex) {
+      this.block.options.tabs.splice(tabIndex, 1)
+    },
+
     getTitleItemClass (index) {
       const { justify, alignment } = this.block.options.style
-      return `order-${index} text-truncate text-${alignment} ${justify !== 'none' ? 'flex-fill' : ''}`
+      return `order-${index} text-truncate text-${alignment} ${justify !== 'none' ? 'flex-fill' : ''} position-relative`
     },
 
     getTabTitle ({ title, block = {} }, tabIndex) {
@@ -146,3 +192,12 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.tab-menu-item-tool {
+  height: 20px;
+  width: 20px;
+  padding: 2px;
+  position: absolute;
+}
+</style>

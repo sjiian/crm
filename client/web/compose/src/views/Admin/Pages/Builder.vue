@@ -152,6 +152,7 @@
             :bounding-rect="boundingRect"
             editable
             class="p-2"
+            @edit-tab-item-block="(index) => editBlock(index)"
           />
         </div>
       </template>
