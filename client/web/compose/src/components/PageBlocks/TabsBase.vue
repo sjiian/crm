@@ -42,39 +42,29 @@
         :lazy="isTabLazy(tab)"
       >
         <template #title>
-          <div v-if="editable" class="position-absolute">
+          <span>
+            {{ getTabTitle(tab, index) }}
+          </span>
+
+          <div
+            v-if="editable"
+            class="d-inline ml-3"
+          >
             <b-button
               :variant="block.options.style.appearance === 'pills' ? 'secondary' : 'primary'"
               size="sm"
-              class="tab-menu-item-tool mr-2"
-              pill
-              style="left: 5px;"
               @click="onTabMenuEditItemClick(tab)"
             >
               <font-awesome-icon
                 :icon="['far', 'edit']"
-                style="height: 9px;"
               />
             </b-button>
 
-            <b-button
-              variant="danger"
-              size="sm"
-              class="tab-menu-item-tool"
-              pill
-              style="left: 28px;"
-              @click="onTabMenuDeleteItemClick(index)"
-            >
-              <font-awesome-icon
-                :icon="['far', 'trash-alt']"
-                style="height: 9px;"
-              />
-            </b-button>
+            <c-input-confirm
+              class="ml-1"
+              @confirmed="onTabMenuDeleteItemClick(index)"
+            />
           </div>
-
-          <span>
-            {{ getTabTitle(tab, index) }}
-          </span>
         </template>
 
         <page-block-tab
@@ -167,7 +157,7 @@ export default {
     onTabMenuEditItemClick (tab) {
       const blockIndex = this.blocks.findIndex(block => fetchID(block) === tab.block.blockID)
       if (blockIndex > -1) {
-        this.$emit('edit-tab-item-block', blockIndex)
+        this.$emit('edit-block', blockIndex)
       }
     },
 
@@ -177,7 +167,7 @@ export default {
 
     getTitleItemClass (index) {
       const { justify, alignment } = this.block.options.style
-      return `order-${index} text-truncate text-${alignment} ${justify !== 'none' ? 'flex-fill' : ''} position-relative`
+      return `order-${index} text-truncate text-${alignment} ${justify !== 'none' ? 'flex-fill' : ''}`
     },
 
     getTabTitle ({ title, block = {} }, tabIndex) {
@@ -192,14 +182,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.tab-menu-item-tool {
-  height: 20px;
-  width: 20px;
-  padding: 2px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>
