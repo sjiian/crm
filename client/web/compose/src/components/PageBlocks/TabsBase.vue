@@ -42,11 +42,11 @@
         :lazy="isTabLazy(tab)"
       >
         <template #title>
-          <template v-if="editable">
+          <div v-if="editable" class="position-absolute">
             <b-button
               :variant="block.options.style.appearance === 'pills' ? 'secondary' : 'primary'"
               size="sm"
-              class="tab-menu-item-tool d-inline-flex justify-content-center align-items-center mr-1 "
+              class="tab-menu-item-tool mr-2"
               pill
               style="left: 5px;"
               @click="onTabMenuEditItemClick(tab)"
@@ -60,7 +60,7 @@
             <b-button
               variant="danger"
               size="sm"
-              class="tab-menu-item-tool d-inline-flex justify-content-center align-items-center mr-5"
+              class="tab-menu-item-tool"
               pill
               style="left: 28px;"
               @click="onTabMenuDeleteItemClick(index)"
@@ -70,7 +70,7 @@
                 style="height: 9px;"
               />
             </b-button>
-          </template>
+          </div>
 
           <span>
             {{ getTabTitle(tab, index) }}
@@ -198,6 +198,8 @@ export default {
   height: 20px;
   width: 20px;
   padding: 2px;
-  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
