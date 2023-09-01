@@ -12,6 +12,7 @@
         v-if="application.applicationID"
         :label="$t('id')"
         label-cols="2"
+        label-class="text-primary"
       >
         <b-form-input
           v-model="application.applicationID"
@@ -24,6 +25,7 @@
       <b-form-group
         :label="$t('name')"
         label-cols="2"
+        label-class="text-primary"
       >
         <b-form-input
           v-model="application.name"
@@ -34,8 +36,8 @@
       </b-form-group>
 
       <b-form-group
-        label-cols="2"
         :class="{ 'mb-0': !application.applicationID }"
+        label-cols="2"
       >
         <b-form-checkbox
           v-model="application.enabled"
@@ -49,6 +51,7 @@
         v-if="application.updatedAt"
         :label="$t('updatedAt')"
         label-cols="2"
+        label-class="text-primary"
       >
         <b-form-input
           data-test-id="input-updated-at"
@@ -62,6 +65,7 @@
         v-if="application.deletedAt"
         :label="$t('deletedAt')"
         label-cols="2"
+        label-class="text-primary"
       >
         <b-form-input
           data-test-id="input-deleted-at"
@@ -75,6 +79,7 @@
         v-if="application.createdAt"
         :label="$t('createdAt')"
         label-cols="2"
+        label-class="text-primary"
         class="mb-0"
       >
         <b-form-input

@@ -7,6 +7,7 @@
       >
         <b-form-group
           :label="$t('kind.number.displayType.label')"
+          label-class="text-primary"
         >
           <b-form-radio-group
             v-model="f.options.display"
@@ -21,7 +22,7 @@
         cols="12"
         sm="6"
       >
-        <label class="d-block mb-3">
+        <label class="d-block mb-3 text-primary">
           {{ $t('kind.number.precisionLabel') }} ({{ f.options.precision }})
         </label>
         <b-form-input
@@ -46,6 +47,7 @@
         >
           <b-form-group
             :label="$t('kind.number.prefixLabel')"
+            label-class="text-primary"
           >
             <b-form-input
               v-model="f.options.prefix"
@@ -60,6 +62,7 @@
         >
           <b-form-group
             :label="$t('kind.number.suffixLabel')"
+            label-class="text-primary"
           >
             <b-form-input
               v-model="f.options.suffix"
@@ -76,6 +79,7 @@
         >
           <b-form-group
             :label="$t('kind.number.formatLabel')"
+            label-class="text-primary"
           >
             <b-form-input
               v-model="f.options.format"
@@ -90,6 +94,7 @@
           <b-form-group
             v-if="f.options.display === 'number'"
             :label="$t('kind.number.examplesLabel')"
+            label-class="text-primary"
           >
             <table
               style="width: 100%;"
@@ -135,6 +140,7 @@
         >
           <b-form-group
             :label="$t('kind.number.progress.minimumValue')"
+            label-class="text-primary"
           >
             <b-form-input
               v-model="f.options.min"
@@ -150,6 +156,7 @@
         >
           <b-form-group
             :label="$t('kind.number.progress.maximumValue')"
+            label-class="text-primary"
           >
             <b-form-input
               v-model="f.options.max"
@@ -165,6 +172,7 @@
         >
           <b-form-group
             :label="$t('kind.number.progress.variants.default')"
+            label-class="text-primary"
           >
             <b-form-select
               v-model="f.options.variant"
@@ -224,7 +232,7 @@
           <b-form-group>
             <template #label>
               <div
-                class="d-flex align-items-center"
+                class="d-flex align-items-center text-primary"
               >
                 {{ $t('kind.number.progress.thresholds.label') }}
                 <b-button
@@ -286,6 +294,7 @@
 
     <b-form-group
       :label=" $t('kind.number.liveExample')"
+      label-class="text-primary"
       class="mb-0 w-100"
     >
       <b-row

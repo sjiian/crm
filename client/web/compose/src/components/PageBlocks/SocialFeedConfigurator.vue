@@ -2,7 +2,7 @@
   <b-tab :title="$t('socialFeed.label')">
     <fieldset
       v-if="page.moduleID && page.moduleID !== '0'"
-      class="form-group"
+      class="form-group text-primary"
     >
       <label>{{ $t('socialFeed.twitterProfileField') }}</label>
       <b-form-select
@@ -10,7 +10,7 @@
         :options="selectOptions"
       />
     </fieldset>
-    <fieldset class="form-group">
+    <fieldset class="form-group text-primary">
       <label>{{ $t('socialFeed.twitterProfileLabel') }}</label>
       <input
         v-model="options.profileUrl"

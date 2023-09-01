@@ -5,6 +5,7 @@
     :content-cols-md="horizontal && '7'"
     :content-cols-xl="horizontal && '8'"
     :class="formGroupStyleClasses"
+    label-class="text-primary"
   >
     <template
       #label
