@@ -221,7 +221,7 @@
         label-class="text-primary"
         class="mb-0"
       >
-        <vue-select
+        <c-input-select
           key="roleID"
           v-model="add.roleID"
           :data-test-id="`select-${add.mode}-roles`"
@@ -232,8 +232,6 @@
           clearable
           :disabled="add.mode === 'eval' && !!add.userID"
           :placeholder="$t('ui.add.role.placeholder')"
-          :calculate-position="calculateDropdownPosition"
-          class="bg-white"
         />
       </b-form-group>
 
@@ -243,7 +241,7 @@
         label-class="text-primary"
         class="mt-3 mb-0"
       >
-        <vue-select
+        <c-input-select
           key="userID"
           v-model="add.userID"
           :data-test-id="`select-${add.mode}-users`"
@@ -254,8 +252,6 @@
           label="name"
           clearable
           :placeholder="$t('ui.add.user.placeholder')"
-          :calculate-position="calculateDropdownPosition"
-          class="bg-white"
           @search="searchUsers"
         />
       </b-form-group>
@@ -265,7 +261,6 @@
 
 <script>
 import CSubmitButton from 'corteza-webapp-admin/src/components/CSubmitButton'
-import { VueSelect } from 'vue-select'
 import _ from 'lodash'
 
 export default {
@@ -275,7 +270,6 @@ export default {
 
   components: {
     CSubmitButton,
-    VueSelect,
   },
 
   props: {

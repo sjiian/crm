@@ -24,7 +24,7 @@ import {
   TooltipComponent,
 } from 'echarts/components'
 
-const { CCorredorManualButtons, CPermissionsButton, CInputConfirm } = components
+const { CCorredorManualButtons, CPermissionsButton, CInputConfirm, CInputSelect } = components
 
 Vue.use(PortalVue)
 Vue.component('c-corredor-manual-buttons', CCorredorManualButtons)
@@ -33,6 +33,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('c-content-header', CContentHeader)
 Vue.component('c-resource-list-status-filter', CResourceListStatusFilter)
 Vue.component('c-input-confirm', CInputConfirm)
+Vue.component('c-input-select', CInputSelect)
 
 // Map things
 Vue.component('l-map', LMap)

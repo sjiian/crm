@@ -12,15 +12,13 @@
         :label="$t('count', { count: members.filter(({ dirty }) => dirty).length })"
         class="mb-0"
       >
-        <vue-select
+        <c-input-select
           ref="picker"
           data-test-id="input-role-members"
           :options="options"
           :get-option-key="u => u.value"
           :get-option-label="u => getUserLabel(u)"
-          :calculate-position="calculateDropdownPosition"
           :placeholder="$t('admin:picker.member.placeholder')"
-          class="bg-white w-100"
           multiple
           @search="search"
           @input="updateValue($event)"
@@ -67,7 +65,6 @@
 
 <script>
 import { debounce } from 'lodash'
-import { VueSelect } from 'vue-select'
 import CSubmitButton from 'corteza-webapp-admin/src/components/CSubmitButton'
 import { components } from '@cortezaproject/corteza-vue/'
 const { CInputConfirm } = components
@@ -80,7 +77,6 @@ export default {
 
   components: {
     CSubmitButton,
-    VueSelect,
     CInputConfirm,
   },
 

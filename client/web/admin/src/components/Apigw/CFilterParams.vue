@@ -32,15 +32,13 @@
             v-model="param.value"
           />
 
-          <vue-select
+          <c-input-select
             v-else-if="param.label === 'workflow'"
             v-model="param.value"
             :options="workflows"
             :get-option-key="getOptionKey"
             :reduce="wf => wf.workflowID"
             :placeholder="$t('filters.placeholders.workflow')"
-            :calculate-position="calculateDropdownPosition"
-            class="bg-white"
           />
 
           <b-form-select
@@ -147,13 +145,7 @@
 </template>
 
 <script>
-import { VueSelect } from 'vue-select'
-
 export default {
-  components: {
-    VueSelect,
-  },
-
   props: {
     filter: {
       type: Object,
