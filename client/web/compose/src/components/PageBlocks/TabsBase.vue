@@ -15,11 +15,11 @@
 
     <b-tabs
       v-else
+      v-model="currentTabIndex"
       card
       :nav-class="navClass"
       :nav-wrapper-class="navWrapperClass"
       :content-class="contentClass"
-      v-model="currentTabIndex"
       v-bind="{
         align: block.options.style.alignment,
         justified: block.options.style.justify === 'justify',
@@ -102,17 +102,17 @@ export default {
 
   name: 'TabBase',
 
-  data () {
-    return {
-      currentTabIndex: 1
-    }
-  },
-
   components: {
     PageBlockTab: () => import('corteza-webapp-compose/src/components/PageBlocks'),
   },
 
   extends: base,
+
+  data () {
+    return {
+      currentTabIndex: 1,
+    }
+  },
 
   computed: {
     tabbedBlocks () {
