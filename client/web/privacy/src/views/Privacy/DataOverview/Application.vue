@@ -14,16 +14,14 @@
         label-class="text-primary"
         class="mb-0"
       >
-        <vue-select
+        <c-input-select
           v-model="connection"
           :disabled="processing.connections"
           :options="connections"
           :clearable="false"
           :placeholder="$t('connection.placeholder')"
-          :calculate-position="calculateDropdownPosition"
           :get-option-label="({ handle, meta }) => meta.name || handle"
           :get-option-key="getOptionKey"
-          class="h-100 bg-white"
         />
       </b-form-group>
     </b-card>
@@ -91,7 +89,6 @@
 <script>
 import EditorToolbar from 'corteza-webapp-privacy/src/components/Common/EditorToolbar'
 import ModuleRecords from 'corteza-webapp-privacy/src/components/Common/ModuleRecords'
-import VueSelect from 'vue-select'
 
 export default {
   name: 'ApplicationDataOverview',
@@ -102,7 +99,6 @@ export default {
   },
 
   components: {
-    VueSelect,
     EditorToolbar,
     ModuleRecords,
   },
