@@ -25,7 +25,7 @@
           label-class="text-primary"
           class="mb-0"
         >
-          <vue-select
+          <c-input-select
             v-model="functionRef"
             :options="functionTypes"
             :get-option-key="getOptionTypeKey"
@@ -34,7 +34,6 @@
             :reduce="f => f.value"
             :filter="functionFilter"
             :placeholder="$t('steps:function.configurator.select-function')"
-            :calculate-position="calculateDropdownPosition"
             @input="functionChanged"
           />
         </b-form-group>
@@ -104,13 +103,12 @@
                 v-if="(paramTypes[functionRef][a.target] || []).length > 1"
                 label-class="text-primary"
               >
-                <vue-select
+                <c-input-select
                   v-model="a.type"
                   :options="(paramTypes[functionRef][a.target] || [])"
                   :get-option-key="getOptionParamKey"
                   :filter="argTypeFilter"
                   :clearable="false"
-                  :calculate-position="calculateDropdownPosition"
                   @input="$root.$emit('change-detected')"
                 />
               </b-form-group>
@@ -122,7 +120,7 @@
                 <div
                   v-if="a.valueType === 'value'"
                 >
-                  <vue-select
+                  <c-input-select
                     v-if="a.target === 'workflow'"
                     key="workflowID"
                     v-model="a.value"
@@ -138,7 +136,7 @@
                     @search="searchWorkflows"
                   />
 
-                  <vue-select
+                  <c-input-select
                     v-else-if="a.input.type === 'select'"
                     v-model="a.value"
                     :options="a.input.properties.options"
@@ -147,7 +145,6 @@
                     :filter="varFilter"
                     :reduce="a => a.value"
                     :placeholder="$t('steps:function.configurator.option-select')"
-                    :calculate-position="calculateDropdownPosition"
                     @input="$root.$emit('change-detected')"
                   />
 
@@ -324,14 +321,12 @@
 
 <script>
 import base from './base'
-import { VueSelect } from 'vue-select'
 import ExpressionEditor from '../ExpressionEditor.vue'
 import ExpressionTable from '../ExpressionTable.vue'
 import { objectSearchMaker, stringSearchMaker } from '../../lib/filter'
 
 export default {
   components: {
-    VueSelect,
     ExpressionEditor,
     ExpressionTable,
   },

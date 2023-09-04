@@ -89,14 +89,13 @@
                 label-class="text-primary"
                 :description="getTypeDescription(item.type)"
               >
-                <vue-select
+                <c-input-select
                   v-model="item.type"
                   :options="types"
                   :get-option-key="getOptionKey"
                   :clearable="false"
                   :filter="varFilter"
                   append-to-body
-                  :calculate-position="calculateDropdownPosition"
                   @input="$root.$emit('change-detected')"
                 />
               </b-form-group>
@@ -123,13 +122,11 @@
 <script>
 import ExpressionEditor from './ExpressionEditor.vue'
 import { objectSearchMaker } from '../lib/filter'
-import { VueSelect } from 'vue-select'
 import draggable from 'vuedraggable'
 
 export default {
   components: {
     ExpressionEditor,
-    VueSelect,
     draggable,
   },
 

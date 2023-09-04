@@ -48,7 +48,7 @@
             :label="labels.edit.label"
             label-class="text-primary"
           >
-            <vue-select
+            <c-input-select
               v-model="currentRole"
               data-test-id="select-user-list-roles"
               key="roleID"
@@ -57,8 +57,6 @@
               :options="roles"
               :get-option-key="getOptionRoleKey"
               append-to-body
-              :calculate-position="calculateDropdownPosition"
-              class="h-100 bg-white"
               @input="onRoleChange"
             />
           </b-form-group>
@@ -182,7 +180,7 @@
         label-class="text-primary"
         class="mb-0"
       >
-        <vue-select
+        <c-input-select
           data-test-id="select-role"
           key="roleID"
           v-model="add.roleID"
@@ -193,8 +191,6 @@
           clearable
           :disabled="!!add.userID"
           :placeholder="labels.add.role.placeholder"
-          :calculate-position="calculateDropdownPosition"
-          class="bg-white"
         />
       </b-form-group>
 
@@ -203,7 +199,7 @@
         label-class="text-primary"
         class="mt-3 mb-0"
       >
-        <vue-select
+        <c-input-select
           data-test-id="select-user"
           key="userID"
           v-model="add.userID"
@@ -214,8 +210,6 @@
           label="name"
           clearable
           :placeholder="labels.add.user.placeholder"
-          :calculate-position="calculateDropdownPosition"
-          class="bg-white"
           @search="searchUsers"
         />
       </b-form-group>
@@ -224,9 +218,8 @@
 </template>
 <script lang="js">
 import { modalOpenEventName, split } from './def.ts'
-import { VueSelect } from 'vue-select'
+import CInputSelect from '../input/CInputSelect.vue'
 import Rules from './form/Rules.vue'
-import calculateDropdownPosition from '../../mixins/vue-select-position'
 
 export default {
   i18nOptions: {
@@ -235,12 +228,8 @@ export default {
 
   components: {
     Rules,
-    VueSelect,
+    CInputSelect,
   },
-
-  mixins: [
-    calculateDropdownPosition
-  ],
 
   props: {
     labels: {

@@ -43,13 +43,12 @@
       :label="$t('workflow.run-as')"
       :description="$t('workflow.not-setup-properly')"
     >
-      <vue-select
+      <c-input--select
         :options="user.options"
         data-test-id="select-run-as"
         :get-option-label="getOptionLabel"
         :get-option-key="getOptionKey"
         :value="user.value"
-        :calculate-position="calculateDropdownPosition"
         @search="search"
         @input="updateRunAs"
       />
@@ -81,16 +80,11 @@
 
 <script>
 import { debounce } from 'lodash'
-import { VueSelect } from 'vue-select'
 import { handle } from '@cortezaproject/corteza-vue'
 
 export default {
   i18nOptions: {
     namespaces: 'configurator',
-  },
-
-  components: {
-    VueSelect,
   },
 
   props: {
