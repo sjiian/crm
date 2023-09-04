@@ -19,6 +19,7 @@
       :nav-class="navClass"
       :nav-wrapper-class="navWrapperClass"
       :content-class="contentClass"
+      v-model="currentTabIndex"
       v-bind="{
         align: block.options.style.alignment,
         justified: block.options.style.justify === 'justify',
@@ -51,9 +52,10 @@
             class="d-inline ml-3"
           >
             <b-button
-              :variant="block.options.style.appearance === 'pills' ? 'secondary' : 'primary'"
               size="sm"
-              @click="onTabMenuEditItemClick(tab)"
+              variant="outline-light"
+              :class="`border-0 ${currentTabIndex === index && block.options.style.appearance === 'pills' ? 'text-white' : 'text-primary'}`"
+              @click="editTabbedBlock(tab)"
             >
               <font-awesome-icon
                 :icon="['far', 'edit']"
@@ -62,7 +64,7 @@
 
             <c-input-confirm
               class="ml-1"
-              @confirmed="onTabMenuDeleteItemClick(index)"
+              @confirmed="deleteTabbedBlock(index)"
             />
           </div>
         </template>
@@ -100,9 +102,16 @@ export default {
 
   name: 'TabBase',
 
+  data () {
+    return {
+      currentTabIndex: 1
+    }
+  },
+
   components: {
     PageBlockTab: () => import('corteza-webapp-compose/src/components/PageBlocks'),
   },
+
   extends: base,
 
   computed: {
@@ -154,14 +163,14 @@ export default {
   },
 
   methods: {
-    onTabMenuEditItemClick (tab) {
+    editTabbedBlock (tab) {
       const blockIndex = this.blocks.findIndex(block => fetchID(block) === tab.block.blockID)
       if (blockIndex > -1) {
         this.$emit('edit-block', blockIndex)
       }
     },
 
-    onTabMenuDeleteItemClick (tabIndex) {
+    deleteTabbedBlock (tabIndex) {
       this.block.options.tabs.splice(tabIndex, 1)
     },
 
