@@ -2,6 +2,7 @@
   <wrap
     v-bind="$props"
     :scrollable-body="false"
+    card-class="tabs-base-block-container"
     v-on="$listeners"
   >
     <div
@@ -15,7 +16,6 @@
 
     <b-tabs
       v-else
-      v-model="currentTabIndex"
       card
       :nav-class="navClass"
       :nav-wrapper-class="navWrapperClass"
@@ -54,7 +54,7 @@
             <b-button
               size="sm"
               variant="outline-light"
-              :class="`border-0 ${currentTabIndex === index && block.options.style.appearance === 'pills' ? 'text-white' : 'text-primary'}`"
+              class="edit-block-btn"
               @click="editTabbedBlock(tab)"
             >
               <font-awesome-icon
@@ -64,7 +64,7 @@
 
             <c-input-confirm
               class="ml-1"
-              @confirmed="deleteTabbedBlock(index)"
+              @confirmed="deleteTab(index)"
             />
           </div>
         </template>
@@ -107,12 +107,6 @@ export default {
   },
 
   extends: base,
-
-  data () {
-    return {
-      currentTabIndex: 1,
-    }
-  },
 
   computed: {
     tabbedBlocks () {
@@ -170,7 +164,7 @@ export default {
       }
     },
 
-    deleteTabbedBlock (tabIndex) {
+    deleteTab (tabIndex) {
       this.block.options.tabs.splice(tabIndex, 1)
     },
 
@@ -191,3 +185,18 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.tabs-base-block-container .nav-pills {
+  .edit-block-btn {
+    color: $primary;
+    border: none;
+  }
+
+  .nav-link {
+    &.active .edit-block-btn {
+      color: $white !important;
+    }
+  }
+}
+</style>
