@@ -54,7 +54,7 @@
             <b-button
               size="sm"
               variant="outline-light"
-              class="edit-block-btn"
+              class="text-primary border-0 edit-block-btn"
               @click="editTabbedBlock(tab)"
             >
               <font-awesome-icon
@@ -188,7 +188,7 @@ export default {
 
 <style lang="scss">
 .tabs-base-block-container .nav-pills {
-  &.active .edit-block-btn {
+  .active .edit-block-btn {
     color: $white !important;
   }
 }
