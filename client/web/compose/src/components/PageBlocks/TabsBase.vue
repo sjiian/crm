@@ -188,15 +188,8 @@ export default {
 
 <style lang="scss">
 .tabs-base-block-container .nav-pills {
-  .edit-block-btn {
-    color: $primary;
-    border: none;
-  }
-
-  .nav-link {
-    &.active .edit-block-btn {
-      color: $white !important;
-    }
+  &.active .edit-block-btn {
+    color: $white !important;
   }
 }
 </style>
