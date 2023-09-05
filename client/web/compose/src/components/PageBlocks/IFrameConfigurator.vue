@@ -6,7 +6,6 @@
       :description="$t('iframe.srcFieldDesc')"
       :disabled="!fields.length"
       label-class="text-primary"
-      class="form-group"
     >
       <b-select
         v-model="options.srcField"
@@ -19,7 +18,6 @@
       :label="$t('iframe.srcLabel')"
       :description="enableFromRecordURL ? $t('iframe.srcDesc') : ''"
       label-class="text-primary"
-      class="form-group"
     >
       <b-form-input
         v-model="options.src"

@@ -12,19 +12,19 @@
         <b-col
           cols="12"
         >
-          <label
-            class="text-primary"
+          <b-form-group
+            :label="$t('connectivity-issues')"
+            label-class="text-primary"
           >
-            {{ $t('connectivity-issues') }}
-          </label>
-          <b-alert
-            v-for="issue in issues"
-            :key="issue"
-            show
-            variant="danger"
-          >
-            {{ issue }}
-          </b-alert>
+            <b-alert
+              v-for="issue in issues"
+              :key="issue"
+              show
+              variant="danger"
+            >
+              {{ issue }}
+            </b-alert>
+          </b-form-group>
         </b-col>
       </b-row>
       <b-row>

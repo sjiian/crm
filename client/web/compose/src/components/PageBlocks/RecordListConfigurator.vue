@@ -20,7 +20,6 @@
               :label="$t('general.module')"
               variant="primary"
               label-class="text-primary"
-              class="form-group"
             >
               <b-form-select
                 v-model="options.moduleID"

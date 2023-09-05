@@ -83,8 +83,8 @@
       </b-form-group>
 
       <b-form-group
-        :class="{ 'mb-0': !route.routeID }"
         label-cols="2"
+        :class="{ 'mb-0': !route.routeID }"
       >
         <b-form-checkbox
           v-model="route.enabled"

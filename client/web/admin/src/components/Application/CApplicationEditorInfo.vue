@@ -36,8 +36,8 @@
       </b-form-group>
 
       <b-form-group
-        :class="{ 'mb-0': !application.applicationID }"
         label-cols="2"
+        :class="{ 'mb-0': !application.applicationID }"
       >
         <b-form-checkbox
           v-model="application.enabled"

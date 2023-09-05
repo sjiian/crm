@@ -73,9 +73,9 @@
       </b-form-group>
 
       <!-- <b-form-group
-        :class="{ 'mb-0': !node.nodeID }"
         label-cols="2"
         label-class="text-primary"
+        :class="{ 'mb-0': !node.nodeID }"
       >
         <b-form-checkbox
           v-model="node.enabled"

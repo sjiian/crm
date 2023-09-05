@@ -22,18 +22,22 @@
         cols="12"
         sm="6"
       >
-        <label class="d-block mb-3 text-primary">
-          {{ $t('kind.number.precisionLabel') }} ({{ f.options.precision }})
-        </label>
-        <b-form-input
-          v-model="f.options.precision"
-          :placeholder="$t('kind.number.precisionPlaceholder')"
-          type="range"
-          min="0"
-          max="6"
-          size="lg"
-          class="mt-1 mb-2"
-        />
+        <b-form-group
+          label-class="mb-2 text-primary"
+        >
+          <template #label>
+            {{ `${$t('kind.number.precisionLabel')} ${(f.options.precision)}` }}
+          </template>
+          <b-form-input
+            v-model="f.options.precision"
+            :placeholder="$t('kind.number.precisionPlaceholder')"
+            type="range"
+            min="0"
+            max="6"
+            size="lg"
+            class="mt-1 mb-2"
+          />
+        </b-form-group>
       </b-col>
     </b-row>
 
