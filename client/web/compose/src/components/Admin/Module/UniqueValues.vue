@@ -14,21 +14,22 @@
         />
       </h5>
 
-      <b-row no-gutters>
+      <b-row
+        no-gutters
+        class="align-items-center"
+      >
         <b-col
           cols="12"
           md="6"
         >
           <b-form-group>
             <b-input-group>
-              <vue-select
+              <c-input-select
                 v-model="rule.currentField"
                 :placeholder="$t('searchFields')"
                 :get-option-label="getOptionLabel"
                 :get-option-key="getOptionKey"
                 :options="filterFieldOptions(rule)"
-                :calculate-position="calculateDropdownPosition"
-                class="bg-white"
                 style="min-width: 300px;"
               />
 
@@ -144,16 +145,11 @@
 
 <script>
 import { compose } from '@cortezaproject/corteza-js'
-import { VueSelect } from 'vue-select'
 
 export default {
   i18nOptions: {
     namespaces: 'module',
     keyPrefix: 'edit.config.uniqueValues',
-  },
-
-  components: {
-    VueSelect,
   },
 
   props: {

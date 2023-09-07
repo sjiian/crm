@@ -43,7 +43,7 @@
       :removable="field.options.selectType !== 'multiple'"
     >
       <template v-slot:single>
-        <vue-select
+        <c-input-select
           v-if="field.options.selectType === 'default'"
           ref="singleSelect"
           :placeholder="$t('kind.user.suggestionPlaceholder')"
@@ -51,12 +51,10 @@
           :get-option-label="getOptionLabel"
           :get-option-key="getOptionKey"
           :append-to-body="appendToBody"
-          :calculate-position="calculateDropdownPosition"
           :clearable="false"
           :filterable="false"
           :selectable="option => option.selectable"
           :loading="processing"
-          class="bg-white w-100"
           @search="search"
           @input="updateValue($event)"
         >
@@ -68,8 +66,9 @@
             @prev="goToPage(false)"
             @next="goToPage(true)"
           />
-        </vue-select>
-        <vue-select
+        </c-input-select>
+
+        <c-input-select
           v-else-if="field.options.selectType === 'multiple'"
           v-model="multipleSelected"
           :placeholder="$t('kind.user.suggestionPlaceholder')"
@@ -77,12 +76,10 @@
           :get-option-label="getOptionLabel"
           :get-option-key="getOptionKey"
           :append-to-body="appendToBody"
-          :calculate-position="calculateDropdownPosition"
           :filterable="false"
           :selectable="option => option.selectable"
           :loading="processing"
           multiple
-          class="bg-white w-100"
           @search="search"
         >
           <pagination
@@ -93,10 +90,11 @@
             @prev="goToPage(false)"
             @next="goToPage(true)"
           />
-        </vue-select>
+        </c-input-select>
       </template>
+
       <template v-slot:default="ctx">
-        <vue-select
+        <c-input-select
           v-if="field.options.selectType === 'each'"
           :placeholder="$t('kind.user.suggestionPlaceholder')"
           :options="options"
@@ -104,12 +102,10 @@
           :get-option-key="getOptionKey"
           :value="getUserByIndex(ctx.index)"
           :append-to-body="appendToBody"
-          :calculate-position="calculateDropdownPosition"
           :clearable="false"
           :filterable="false"
           :selectable="option => option.selectable"
           :loading="processing"
-          class="bg-white w-100"
           @search="search"
           @input="updateValue($event, ctx.index)"
         >
@@ -121,25 +117,24 @@
             @prev="goToPage(false)"
             @next="goToPage(true)"
           />
-        </vue-select>
+        </c-input-select>
         <span v-else>{{ getOptionLabel(getUserByIndex(ctx.index)) }}</span>
       </template>
     </multi>
+
     <template
       v-else
     >
-      <vue-select
+      <c-input-select
         :placeholder="$t('kind.user.suggestionPlaceholder')"
         :options="options"
         :get-option-label="getOptionLabel"
         :get-option-key="getOptionKey"
         :value="getUserByIndex()"
         :append-to-body="appendToBody"
-        :calculate-position="calculateDropdownPosition"
         :filterable="false"
         :selectable="option => option.selectable"
         :loading="processing"
-        class="bg-white w-100"
         @input="updateValue($event)"
         @search="search"
       >
@@ -151,7 +146,8 @@
           @prev="goToPage(false)"
           @next="goToPage(true)"
         />
-      </vue-select>
+      </c-input-select>
+
       <errors :errors="errors" />
     </template>
   </b-form-group>
@@ -159,7 +155,6 @@
 <script>
 import { debounce } from 'lodash'
 import base from './base'
-import { VueSelect } from 'vue-select'
 import { mapActions, mapGetters } from 'vuex'
 import Pagination from '../Common/Pagination.vue'
 
@@ -169,7 +164,6 @@ export default {
   },
 
   components: {
-    VueSelect,
     Pagination,
   },
 
@@ -221,7 +215,7 @@ export default {
 
       set (users) {
         if (users && Array.isArray(users)) {
-          // When adding/removing items from vue-selects[multiple],
+          // When adding/removing items from c-input-selects[multiple],
           // we get array of options back
 
           this.addUserToResolved(users)

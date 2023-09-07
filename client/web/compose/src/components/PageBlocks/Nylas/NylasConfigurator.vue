@@ -39,7 +39,7 @@
           label-class="text-primary"
         >
           <c-input-checkbox
-            v-model="options.accessTokenRequired"
+            v-model="accessTokenRequired"
             switch
             :labels="checkboxLabels"
           />
@@ -65,7 +65,7 @@
                 :label="$t('prefill.to')"
                 label-class="text-primary"
               >
-                <vue-select
+                <c-input-select
                   v-model="options.prefill.to"
                   :options="moduleTextFields"
                   :get-option-label="getFieldLabel"
@@ -86,16 +86,14 @@
                 :label="$t('prefill.subject')"
                 label-class="text-primary"
               >
-                <vue-select
+                <c-input-select
                   v-model="options.prefill.subject"
                   :options="moduleTextFields"
                   :get-option-label="getFieldLabel"
                   :get-option-key="getOptionKey"
                   :placeholder="$t('prefill.selectField')"
                   :reduce="field => field.fieldID"
-                  :calculate-position="calculateDropdownPosition"
                   append-to-body
-                  class="bg-white"
                 />
               </b-form-group>
             </b-col>
@@ -107,16 +105,14 @@
                 :label="$t('prefill.body')"
                 label-class="text-primary"
               >
-                <vue-select
+                <c-input-select
                   v-model="options.prefill.body"
                   :options="moduleTextFields"
                   :get-option-label="getFieldLabel"
                   :get-option-key="getOptionKey"
                   :placeholder="$t('prefill.selectField')"
                   :reduce="field => field.fieldID"
-                  :calculate-position="calculateDropdownPosition"
                   append-to-body
-                  class="bg-white"
                 />
               </b-form-group>
             </b-col>
@@ -131,16 +127,14 @@
                 :label="$t('prefill.queryString')"
                 label-class="text-primary"
               >
-                <vue-select
+                <c-input-select
                   v-model="options.prefill.queryString"
                   :options="moduleTextFields"
                   :get-option-label="getFieldLabel"
                   :get-option-key="getOptionKey"
                   :placeholder="$t('prefill.selectField')"
                   :reduce="field => field.fieldID"
-                  :calculate-position="calculateDropdownPosition"
                   append-to-body
-                  class="bg-white"
                 />
               </b-form-group>
             </b-col>
@@ -152,7 +146,6 @@
 </template>
 
 <script>
-import { VueSelect } from 'vue-select'
 import { NoID } from '@cortezaproject/corteza-js'
 import base from '../base'
 
@@ -160,10 +153,6 @@ export default {
   i18nOptions: {
     namespaces: 'block',
     keyPrefix: 'nylas.configurator',
-  },
-
-  components: {
-    VueSelect,
   },
 
   extends: base,
@@ -193,6 +182,16 @@ export default {
 
     showPreviewSection () {
       return ['Composer', 'Mailbox'].includes(this.options.kind) && (this.page.moduleID !== NoID)
+    },
+
+    accessTokenRequired: {
+      get () {
+        return !!this.options.accessTokenRequired
+      },
+
+      set (v) {
+        this.options.accessTokenRequired = v
+      },
     },
   },
 

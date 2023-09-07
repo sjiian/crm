@@ -67,7 +67,7 @@
                   <b-td
                     class="px-2"
                   >
-                    <vue-select
+                    <c-input-select
                       v-model="filter.name"
                       :options="fieldOptions"
                       :get-option-key="getOptionKey"
@@ -77,9 +77,7 @@
                       option-text="label"
                       :reduce="f => f.name"
                       append-to-body
-                      :calculate-position="calculateDropdownPosition"
                       :class="{ 'filter-field-picker': !!filter.name }"
-                      class="field-selector bg-white"
                       @input="onChange($event, groupIndex, index)"
                     />
                   </b-td>
@@ -250,7 +248,6 @@
 <script>
 import FieldEditor from '../ModuleFields/Editor'
 import { compose, validator } from '@cortezaproject/corteza-js'
-import { VueSelect } from 'vue-select'
 
 export default {
   i18nOptions: {
@@ -259,7 +256,6 @@ export default {
 
   components: {
     FieldEditor,
-    VueSelect,
   },
 
   props: {

@@ -58,6 +58,7 @@
             <h5 class="mb-1">
               {{ $t('module:general.fields') }}
             </h5>
+
             <small class="text-muted">
               {{ $t('recordList.moduleFieldsFootnote') }}
             </small>
@@ -235,6 +236,7 @@
                   v-model="options.prefilter"
                   :placeholder="$t('recordList.record.prefilterPlaceholder')"
                 />
+
                 <b-form-text>
                   <i18next
                     path="recordList.record.prefilterFootnote"
@@ -270,6 +272,7 @@
                       >
                         {{ $t('recordList.filter.name.label') }}
                       </b-th>
+
                       <b-th
                         class="text-primary"
                         style="width: 45%; min-width: 250px;"
@@ -282,6 +285,7 @@
                       />
                     </b-tr>
                   </b-thead>
+
                   <b-tbody>
                     <b-tr
                       v-for="(filter, index) in options.filterPresets"
@@ -312,17 +316,15 @@
                       </b-td>
 
                       <b-td>
-                        <vue-select
+                        <c-input-select
                           v-model="filter.roles"
                           :options="roleOptions"
                           :get-option-label="getRoleLabel"
                           :get-option-key="getOptionKey"
                           :placeholder="$t('recordList.filter.role.placeholder')"
                           :reduce="role => role.roleID"
-                          :calculate-position="calculateDropdownPosition"
                           append-to-body
                           multiple
-                          class="bg-white"
                         />
                       </b-td>
 
@@ -738,7 +740,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import { NoID } from '@cortezaproject/corteza-js'
-import { VueSelect } from 'vue-select'
 import base from './base'
 import AutomationTab from './Shared/AutomationTab'
 import FieldPicker from 'corteza-webapp-compose/src/components/Common/FieldPicker'
@@ -758,7 +759,6 @@ export default {
     FieldPicker,
     CInputPresort,
     RecordListFilter,
-    VueSelect,
   },
 
   extends: base,

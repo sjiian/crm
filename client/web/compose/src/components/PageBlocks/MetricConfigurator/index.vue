@@ -178,14 +178,12 @@
               <b-form-group
                 :label="$t('metric.edit.metricFieldLabel')"
               >
-                <vue-select
+                <c-input-select
                   v-model="edit.metricField"
                   :placeholder="$t('metric.edit.metricFieldSelect')"
                   :options="metricFields"
                   :get-option-key="getOptionMetricFieldKey"
                   :reduce="f => f.name"
-                  :calculate-position="calculateDropdownPosition"
-                  class="bg-white"
                   @input="onMetricFieldChange"
                 />
               </b-form-group>
@@ -193,15 +191,13 @@
               <b-form-group
                 :label="$t('metric.edit.metricAggregateLabel')"
               >
-                <vue-select
+                <c-input-select
                   v-model="edit.operation"
                   :disabled="edit.metricField === 'count'"
                   :placeholder="$t('metric.edit.metricSelectAggregate')"
                   :options="aggregationOperations"
                   :get-option-key="getOptionAggregationOperationKey"
                   :reduce="a => a.operation"
-                  :calculate-position="calculateDropdownPosition"
-                  class="bg-white"
                 />
               </b-form-group>
 
@@ -261,7 +257,7 @@
                   />
                 </template>
 
-                <vue-select
+                <c-input-select
                   v-model="edit.drillDown.blockID"
                   :options="drillDownOptions"
                   :disabled="!edit.drillDown.enabled"
@@ -270,7 +266,6 @@
                   :clearable="true"
                   :placeholder="$t('metric.drillDown.openInModal')"
                   append-to-body
-                  class="block-selector bg-white w-100"
                 />
               </b-form-group>
             </fieldset>
@@ -330,7 +325,6 @@ import base from '../base'
 import MStyle from './MStyle'
 import { mapGetters } from 'vuex'
 import MetricBase from '../MetricBase'
-import { VueSelect } from 'vue-select'
 import { compose, NoID } from '@cortezaproject/corteza-js'
 
 export default {
@@ -342,7 +336,6 @@ export default {
   components: {
     MStyle,
     MetricBase,
-    VueSelect,
   },
   extends: base,
 

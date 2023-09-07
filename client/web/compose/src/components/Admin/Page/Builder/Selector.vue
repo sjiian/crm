@@ -42,12 +42,11 @@
         cols="12"
       >
         <b-input-group class="d-flex w-100">
-          <vue-select
+          <c-input-select
             v-model="selectedExistingBlock"
             :get-option-label="getBlockLabel"
             :get-option-key="b => b.blockID"
             :options="existingBlocks"
-            :calculate-position="calculateDropdownPosition"
             :placeholder="$t('selector.selectableBlocks.placeholder')"
             append-to-body
             class="bg-white"
@@ -65,6 +64,7 @@
                 :icon="['far', 'clone']"
               />
             </b-button>
+
             <b-button
               :title="$t('selector.tooltip.clone.ref')"
               variant="light"
@@ -85,16 +85,11 @@
 
 <script>
 import * as images from '../../../../assets/PageBlocks'
-import { VueSelect } from 'vue-select'
 import { compose } from '@cortezaproject/corteza-js'
 
 export default {
   i18nOptions: {
     namespaces: 'block',
-  },
-
-  components: {
-    VueSelect,
   },
 
   props: {

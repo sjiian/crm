@@ -77,6 +77,7 @@
             {{ $t("navigation.navigationItems") }}
           </h5>
         </div>
+
         <div class="mt-3">
           <draggable
             v-model="block.options.navigationItems"
@@ -97,24 +98,30 @@
                 <thead>
                   <tr>
                     <th style="width: auto;" />
+
                     <th style="min-width: 200px;">
                       {{ $t("navigation.type") }}
                     </th>
+
                     <th style="min-width: 200px;">
                       {{ $t("navigation.color") }}
                     </th>
+
                     <th style="min-width: 200px;">
                       {{ $t("navigation.background") }}
                     </th>
+
                     <th
                       class="text-center"
                       style="width: 50px; min-width: 50px;"
                     >
                       {{ $t("navigation.enabled") }}
                     </th>
+
                     <th style="width: auto; min-width: 100px;" />
                   </tr>
                 </thead>
+
                 <tbody>
                   <tr>
                     <td class="align-middle">
@@ -123,12 +130,14 @@
                         class="grab text-light"
                       />
                     </td>
+
                     <td class="align-middle">
                       <b-form-select
                         v-model="item.type"
                         :options="navigationItemTypes"
                       />
                     </td>
+
                     <td class="align-middle">
                       <c-input-color-picker
                         v-model="item.options.textColor"
@@ -139,6 +148,7 @@
                         class="w-100"
                       />
                     </td>
+
                     <td class="align-middle">
                       <c-input-color-picker
                         v-model="item.options.backgroundColor"
@@ -156,6 +166,7 @@
                         :labels="{}"
                       />
                     </td>
+
                     <td class="align-middle">
                       <c-input-confirm
                         button-class="px-2"

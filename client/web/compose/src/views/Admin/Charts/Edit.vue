@@ -93,7 +93,7 @@
                         :label="$t('colorScheme.label')"
                         label-class="text-primary"
                       >
-                        <vue-select
+                        <c-input-select
                           v-model="chart.config.colorScheme"
                           :options="colorSchemes"
                           :reduce="cs => cs.value"
@@ -117,7 +117,7 @@
                               class="d-inline-block color-box mr-1 mb-1"
                             />
                           </template>
-                        </vue-select>
+                        </c-input-select>
 
                         <template
                           v-if="currentColorScheme"
@@ -322,7 +322,6 @@ import draggable from 'vuedraggable'
 import ReportItem from 'corteza-webapp-compose/src/components/Chart/ReportItem'
 import Reports from 'corteza-webapp-compose/src/components/Chart/Report'
 import { chartConstructor } from 'corteza-webapp-compose/src/lib/charts'
-import VueSelect from 'vue-select'
 import { evaluatePrefilter } from 'corteza-webapp-compose/src/lib/record-filter'
 
 const { CInputCheckbox } = components
@@ -345,7 +344,6 @@ export default {
     ChartComponent,
     draggable,
     ReportItem,
-    VueSelect,
     CInputCheckbox,
   },
 

@@ -1,6 +1,7 @@
 <template>
   <tr>
     <td />
+
     <td>
       <b-form-group :label="$t('navigation.fieldLabel')">
         <b-form-input
@@ -9,9 +10,10 @@
         />
       </b-form-group>
     </td>
+
     <td style="min-width: 200px;">
       <b-form-group :label="$t('navigation.composePage')">
-        <vue-select
+        <c-input-select
           key="pageID"
           v-model="options.item.pageID"
           :placeholder="$t('navigation.none')"
@@ -19,15 +21,14 @@
           append-to-body
           :get-option-key="getOptionKey"
           label="title"
-          :calculate-position="calculateDropdownPosition"
           :reduce="f => f.pageID"
           option-value="pageID"
           option-text="title"
-          class="bg-white"
           @input="updateLabelValue"
         />
       </b-form-group>
     </td>
+
     <td>
       <b-form-group :label="$t('navigation.openIn')">
         <b-form-select
@@ -36,6 +37,7 @@
         />
       </b-form-group>
     </td>
+
     <td
       v-if="selectedPageChildren(options.item.pageID).length > 0"
       cols="12"
@@ -54,21 +56,16 @@
         />
       </b-form-group>
     </td>
+
     <td />
   </tr>
 </template>
 
 <script>
 import base from './base'
-
-import { VueSelect } from 'vue-select'
 import { NoID, compose } from '@cortezaproject/corteza-js'
 
 export default {
-  components: {
-    VueSelect,
-  },
-
   extends: base,
 
   props: {

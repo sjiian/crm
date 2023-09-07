@@ -7,7 +7,7 @@
       :description="$t('connection.description')"
       label-class="text-primary"
     >
-      <vue-select
+      <c-input-select
         v-model="module.config.dal.connectionID"
         :options="connections"
         :get-option-key="getOptionKey"
@@ -16,8 +16,6 @@
         :reduce="s => s.connectionID"
         :placeholder="$t('connection.placeholder')"
         :get-option-label="getConnectionLabel"
-        :calculate-position="calculateDropdownPosition"
-        class="bg-white"
       />
     </b-form-group>
 
@@ -86,7 +84,6 @@
 <script>
 import { compose, NoID } from '@cortezaproject/corteza-js'
 import { moduleFieldStrategyConfig, systemFieldStrategyConfig, types } from './encoding-strategy'
-import VueSelect from 'vue-select'
 import DalFieldStoreEncoding from 'corteza-webapp-compose/src/components/Admin/Module/DalFieldStoreEncoding'
 
 const PrimaryConnType = 'corteza::system:primary-dal-connection'
@@ -98,7 +95,6 @@ export default {
   },
 
   components: {
-    VueSelect,
     DalFieldStoreEncoding,
   },
 
