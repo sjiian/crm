@@ -21,6 +21,7 @@
         class="form-control"
       />
     </td>
+
     <td>
       <b-input-group>
         <b-form-input
@@ -28,6 +29,7 @@
           type="text"
           class="form-control"
         />
+
         <b-input-group-append>
           <field-translator
             :field.sync="value"
@@ -39,21 +41,24 @@
         </b-input-group-append>
       </b-input-group>
     </td>
+
     <td>
       <b-input-group class="field-type">
-        <b-select
+        <c-input-select
           v-model="value.kind"
+          :options="fieldKinds"
+          :reduce="kind => kind.kind"
           :disabled="disabled"
+          :clearable="false"
+          style="width: 150px;"
+          class="kind-selector"
           @change="$emit('updateKind')"
         >
-          <option
-            v-for="({ kind, label }) in fieldKinds"
-            :key="kind"
-            :value="kind"
-          >
+          <template #option="{ label }">
             {{ label }}
-          </option>
-        </b-select>
+          </template>
+        </c-input-select>
+
         <b-input-group-append>
           <b-button
             variant="light"
@@ -68,8 +73,10 @@
         </b-input-group-append>
       </b-input-group>
     </td>
+
     <td />
     <td />
+
     <td
       class="align-middle text-center"
     >
@@ -202,5 +209,13 @@ td {
   .handle {
     width: 30px;
   }
+}
+
+.kind-selector {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  font-size: 1rem;
+  min-width: auto !important;
 }
 </style>

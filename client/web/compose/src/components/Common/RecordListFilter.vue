@@ -58,6 +58,7 @@
                     >
                       {{ $t('recordList.filter.where') }}
                     </h6>
+
                     <b-form-select
                       v-else
                       v-model="filter.condition"

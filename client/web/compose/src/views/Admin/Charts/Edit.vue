@@ -101,7 +101,6 @@
                           option-text="label"
                           option-value="value"
                           :placeholder="$t('colorScheme.placeholder')"
-                          :calculate-position="calculateDropdownPosition"
                           class="bg-white w-100"
                         >
                           <template #option="option">

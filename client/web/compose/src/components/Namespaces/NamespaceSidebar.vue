@@ -66,6 +66,7 @@
           >
             {{ $t('publicPages') }}
           </b-button>
+
           <b-button
             v-else-if="namespace.canManageNamespace"
             data-test-id="button-admin"
@@ -75,6 +76,7 @@
           >
             {{ $t('adminPanel') }}
           </b-button>
+
           <c-input-search
             v-model.trim="query"
             :disabled="loading"

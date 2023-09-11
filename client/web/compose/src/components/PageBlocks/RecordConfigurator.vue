@@ -176,7 +176,6 @@
                 :get-option-label="getOptionLabel"
                 :get-option-key="getOptionKey"
                 :reduce="option => option.isSystem ? option.name : option.fieldID"
-                :calculate-position="calculateDropdownPosition"
                 class="bg-white"
               />
             </b-td>

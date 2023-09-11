@@ -57,7 +57,6 @@
           :get-option-key="getOptionKey"
           :options="moduleFields"
           append-to-body
-          :calculate-position="calculateDropdownPosition"
           :selectable="option => !fields.includes(option.name)"
           :reduce="f => f.name"
           class="bg-white position-relative"

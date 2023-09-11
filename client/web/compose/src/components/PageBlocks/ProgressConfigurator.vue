@@ -289,7 +289,6 @@
                 :options="maxValueModuleFields"
                 :get-option-key="getOptionModuleFieldKey"
                 :reduce="f => f.name"
-                :calculate-position="calculateDropdownPosition"
                 class="bg-white"
                 @input="fieldChanged($event, options.maxValue)"
               />
@@ -311,7 +310,6 @@
                 :options="aggregationOperations"
                 :get-option-key="getOptionAggregationOperationKey"
                 :reduce="a => a.operation"
-                :calculate-position="calculateDropdownPosition"
                 class="bg-white"
               />
             </b-form-group>

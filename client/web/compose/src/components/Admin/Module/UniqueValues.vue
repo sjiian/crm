@@ -96,7 +96,9 @@
               :key="`constraint-${consIndex}`"
             >
               <td>{{ getOptionLabel(getField(constraint.attribute)) }}</td>
+
               <td>{{ getField(constraint.attribute).kind }}</td>
+
               <td>
                 <b-form-select
                   v-model="constraint.modifier"
@@ -104,6 +106,7 @@
                   size="sm"
                 />
               </td>
+
               <td>
                 <b-form-select
                   v-model="constraint.multiValue"
@@ -112,6 +115,7 @@
                   size="sm"
                 />
               </td>
+
               <td class="text-right p-0 px-4 align-middle">
                 <c-input-confirm
                   button-class="text-right"

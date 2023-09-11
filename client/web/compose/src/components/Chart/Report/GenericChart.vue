@@ -204,19 +204,15 @@
             :label="$t('edit.metric.output.label')"
             label-class="text-primary"
           >
-            <b-form-select
+            <c-input-select
               v-model="metric.type"
               :options="chartTypes"
-              @input="chartTypeChanged(metric)"
-            >
-              <template slot="first">
-                <option
-                  :value="undefined"
-                >
-                  {{ $t('edit.metric.output.placeholder') }}
-                </option>
-              </template>
-            </b-form-select>
+              label="text"
+              :reduce="option => option.value"
+              :get-option-key="option => option.value"
+              :placeholder="$t('edit.metric.output.placeholder')"
+              @input="value => chartTypeChanged(metric)"
+            />
           </b-form-group>
         </b-col>
 
