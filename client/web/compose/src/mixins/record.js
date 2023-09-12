@@ -318,6 +318,10 @@ export default {
           this.fields = []
           this.record = new compose.Record(this.module, {})
           this.$emit('save')
+
+          this.$root.$emit('trigger-recordlist-refresh', {
+            ...this.module
+          })
         })
         .catch(this.toastErrorHandler(this.$t('notification:record.deleteBulkRecordUpdateFailed')))
         .finally(() => {

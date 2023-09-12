@@ -1069,6 +1069,24 @@ export default {
       this.$root.$on(`refetch-non-record-blocks:${pageID}`, () => {
         this.refresh(true)
       })
+
+      this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedRecordsUpdate)
+    },
+
+    refreshOnRelatedRecordsUpdate (module) {
+      const recordFields = this.recordListModule.fields.filter((f) => f.kind === 'Record')
+
+      if (this.recordListModule.moduleID === module.moduleID) {
+        this.refresh(true)
+      } else {
+        for (let i = 0; i < recordFields.length; i++) {
+          const r = recordFields[i];
+          if (r.options.moduleID === module.moduleID) {
+            this.refresh(false);
+            break;
+          }
+        }
+      }
     },
 
     onFilter (filter = []) {
@@ -1757,7 +1775,6 @@ export default {
 
     onBulkUpdate () {
       this.selectedAllRecords = false
-      this.refresh(true)
     },
 
     editInlineField (record, field) {
@@ -1870,6 +1887,7 @@ export default {
       this.$root.$off(`refetch-non-record-blocks:${pageID}`, () => {
         this.refresh(true)
       })
+      this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedRecordsUpdate)
     },
 
     handleAddRecord () {

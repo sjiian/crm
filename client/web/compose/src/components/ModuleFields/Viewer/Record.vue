@@ -48,6 +48,8 @@ export default {
       recordValues: {},
 
       relRecords: [],
+
+      relatedModuleID: undefined
     }
   },
 
@@ -77,6 +79,7 @@ export default {
     value: {
       immediate: true,
       handler (value) {
+        this.relatedModuleID = undefined
         this.formatRecordValues(value)
       },
     },
@@ -86,12 +89,27 @@ export default {
     this.setDefaultValues()
   },
 
+  mounted () {
+    this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedModuleUpdate)
+  },
+
+  beforeDestroy() {
+    this.$root.$off('trigger-recordlist-refresh', this.refreshOnRelatedModuleUpdate)
+  },
+
   methods: {
     ...mapActions({
       findModuleByID: 'module/findByID',
       resolveUsers: 'user/resolveUsers',
       resolveRecords: 'record/resolveRecords',
     }),
+
+
+    refreshOnRelatedModuleUpdate (module) {
+      if (this.relatedModuleID === module.moduleID) {
+        this.formatRecordValues(this.value)
+      }
+    },
 
     linkToRecord (recordID) {
       if (!this.recordPage || !recordID) {
@@ -126,6 +144,8 @@ export default {
 
           const relatedModule = await this.findModuleByID({ namespaceID, moduleID: relatedField.options.moduleID })
           const relatedRecordIDs = new Set()
+
+          this.relatedModuleID = relatedModule.moduleID
 
           records.forEach(r => {
             const recordValue = relatedField.isMulti ? r.values[relatedField.name] : [r.values[relatedField.name]]

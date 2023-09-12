@@ -46,7 +46,7 @@ export default function (ComposeAPI) {
 
         // exclude existing & make unique
         const existing = new Set(getters.set.map(({ recordID }) => recordID))
-        recordIDs = [...new Set(recordIDs.filter(recordID => !existing.has(recordID)))]
+        recordIDs = [...new Set(recordIDs)]
 
         if (recordIDs.length === 0) {
           // Check for values again

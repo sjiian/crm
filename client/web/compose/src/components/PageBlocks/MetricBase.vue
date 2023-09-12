@@ -91,6 +91,8 @@ export default {
     this.$root.$on('metric.update', this.refresh)
     this.$root.$on(`refetch-non-record-blocks:${this.page.pageID}`, this.refresh)
     this.$root.$on('drill-down-chart', this.drillDown)
+
+    this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedRecordsUpdate)
   },
 
   beforeDestroy () {
@@ -229,10 +231,22 @@ export default {
       })
     },
 
+    refreshOnRelatedRecordsUpdate (module) {
+      const metrics = this.options.metrics;
+      for (let i = 0; i < metrics.length; i++) {
+        const m = metrics[i];
+        if (m.moduleID === module.moduleID) {
+          this.refresh();
+          break;
+        }
+      }
+    },
+
     destroyEvents () {
       this.$root.$off('metric.update', this.refresh)
       this.$root.$off(`refetch-non-record-blocks:${this.page.pageID}`, this.refresh)
       this.$root.$off('drill-down-chart', this.drillDown)
+      this.$root.$off('trigger-recordlist-refresh', this.refreshOnRelatedRecordsUpdate)
     },
   },
 }
