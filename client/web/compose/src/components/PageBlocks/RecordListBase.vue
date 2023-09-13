@@ -1079,12 +1079,12 @@ export default {
       if (this.recordListModule.moduleID === module.moduleID) {
         this.refresh(true)
       } else {
-        for (let i = 0; i < recordFields.length; i++) {
-          const r = recordFields[i];
-          if (r.options.moduleID === module.moduleID) {
-            this.refresh(false);
-            break;
-          }
+        const hasMatchingModule = recordFields.some((r) => {
+          return r.options.moduleID === module.moduleID
+        })
+
+        if (hasMatchingModule) {
+          this.refresh(false)
         }
       }
     },

@@ -232,13 +232,14 @@ export default {
     },
 
     refreshOnRelatedRecordsUpdate (module) {
-      const metrics = this.options.metrics;
-      for (let i = 0; i < metrics.length; i++) {
-        const m = metrics[i];
-        if (m.moduleID === module.moduleID) {
-          this.refresh();
-          break;
-        }
+      const metrics = this.options.metrics
+
+      const hasMatchingModule = metrics.some((m) => {
+        return m.moduleID === module.moduleID
+      })
+
+      if (hasMatchingModule) {
+        this.refresh()
       }
     },
 

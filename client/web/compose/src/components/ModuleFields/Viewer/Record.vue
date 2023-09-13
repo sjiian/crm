@@ -49,7 +49,7 @@ export default {
 
       relRecords: [],
 
-      relatedModuleID: undefined
+      relatedModuleID: undefined,
     }
   },
 
@@ -87,14 +87,11 @@ export default {
 
   beforeDestroy () {
     this.setDefaultValues()
+    this.$root.$off('trigger-recordlist-refresh', this.refreshOnRelatedModuleUpdate)
   },
 
   mounted () {
     this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedModuleUpdate)
-  },
-
-  beforeDestroy() {
-    this.$root.$off('trigger-recordlist-refresh', this.refreshOnRelatedModuleUpdate)
   },
 
   methods: {
@@ -103,7 +100,6 @@ export default {
       resolveUsers: 'user/resolveUsers',
       resolveRecords: 'record/resolveRecords',
     }),
-
 
     refreshOnRelatedModuleUpdate (module) {
       if (this.relatedModuleID === module.moduleID) {
@@ -214,6 +210,7 @@ export default {
       this.processing = false
       this.recordValues = {}
       this.relRecords = []
+      this.relatedModuleID = undefined
     },
   },
 }

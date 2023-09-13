@@ -320,7 +320,7 @@ export default {
           this.$emit('save')
 
           this.$root.$emit('trigger-recordlist-refresh', {
-            ...this.module
+            ...this.module,
           })
         })
         .catch(this.toastErrorHandler(this.$t('notification:record.deleteBulkRecordUpdateFailed')))
