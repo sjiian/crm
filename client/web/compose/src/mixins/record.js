@@ -168,6 +168,11 @@ export default {
           }
 
           this.toastSuccess(this.$t(`notification:record.${isNew ? 'create' : 'update'}Success`))
+
+          this.clearRecordSet()
+          this.$root.$emit('module-records-updated', {
+            moduleID: this.module.moduleID,
+          })
         })
         .catch(this.toastErrorHandler(this.$t(`notification:record.${isNew ? 'create' : 'update'}Failed`)))
         .finally(() => {
@@ -224,6 +229,11 @@ export default {
             }
 
             this.$router.push({ name: route, params: { ...this.$route.params, recordID: record.recordID } })
+
+            this.clearRecordSet()
+            this.$root.$emit('module-records-updated', {
+              moduleID: this.module.moduleID,
+            })
           }
         })
         .catch(this.toastErrorHandler(this.$t(
