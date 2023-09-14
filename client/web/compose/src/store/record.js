@@ -44,19 +44,10 @@ export default function (ComposeAPI) {
           return
         }
 
-        console.log('state', state)
-        console.log('recordIDs before', recordIDs)
-
-        // exclude existing & make unique
-        const existing = new Set(getters.set.map(({ recordID }) => recordID))
-        recordIDs = [...new Set(recordIDs.filter(recordID => !existing.has(recordID)))]
-
         if (recordIDs.length === 0) {
           // Check for values again
           return
         }
-
-        console.log('recordIDs', recordIDs)
 
         const query = recordIDs.map(recordID => `recordID = ${recordID}`).join(' OR ')
 
@@ -64,7 +55,6 @@ export default function (ComposeAPI) {
           commit(types.updateSet, set)
         }).finally(() => {
           commit(types.completed)
-          existing.clear()
           recordIDs = []
         })
       },
@@ -78,7 +68,6 @@ export default function (ComposeAPI) {
       },
 
       clearSet ({ commit }) {
-        console.log('clearing set')
         commit(types.clearSet)
       },
     },
@@ -103,7 +92,7 @@ export default function (ComposeAPI) {
         const existing = new Set(state.set.map(({ recordID }) => recordID))
 
         set.forEach(newItem => {
-          const oldIndex = !existing.has(newItem.recordID) ? state.set.findIndex(({ recordID }) => recordID === newItem.recordID) : -1
+          const oldIndex = existing.has(newItem.recordID) ? state.set.findIndex(({ recordID }) => recordID === newItem.recordID) : -1
           if (oldIndex > -1) {
             state.set.splice(oldIndex, 1, newItem)
           } else {
@@ -115,7 +104,6 @@ export default function (ComposeAPI) {
       [types.clearSet] (state) {
         state.pending = false
         state.set.splice(0)
-        console.log('state.set', state.set)
       },
     },
   }

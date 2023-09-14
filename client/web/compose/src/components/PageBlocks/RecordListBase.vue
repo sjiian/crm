@@ -1074,11 +1074,10 @@ export default {
     },
 
     refreshOnRelatedRecordsUpdate (module) {
-      const recordFields = this.fields.filter((f) => f.moduleField.kind === 'Record')
-
       if (this.recordListModule.moduleID === module.moduleID) {
         this.refresh(true)
       } else {
+        const recordFields = this.fields.filter((f) => f.moduleField.kind === 'Record')
         const hasMatchingModule = recordFields.some((r) => {
           return r.moduleField.options.moduleID === module.moduleID
         })
@@ -1887,7 +1886,7 @@ export default {
       this.$root.$off(`refetch-non-record-blocks:${pageID}`, () => {
         this.refresh(true)
       })
-      this.$root.$on('module-records-updated', this.refreshOnRelatedRecordsUpdate)
+      this.$root.$off('module-records-updated', this.refreshOnRelatedRecordsUpdate)
     },
 
     handleAddRecord () {

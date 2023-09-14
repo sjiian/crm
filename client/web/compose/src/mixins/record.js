@@ -54,7 +54,6 @@ export default {
   methods: {
     ...mapActions({
       updatePrompts: 'wfPrompts/update',
-      clearRecordSet: 'record/clearSet',
     }),
 
     /**
@@ -169,7 +168,6 @@ export default {
 
           this.toastSuccess(this.$t(`notification:record.${isNew ? 'create' : 'update'}Success`))
 
-          this.clearRecordSet()
           this.$root.$emit('module-records-updated', {
             moduleID: this.module.moduleID,
           })
@@ -230,7 +228,6 @@ export default {
 
             this.$router.push({ name: route, params: { ...this.$route.params, recordID: record.recordID } })
 
-            this.clearRecordSet()
             this.$root.$emit('module-records-updated', {
               moduleID: this.module.moduleID,
             })
@@ -330,10 +327,7 @@ export default {
           this.record = new compose.Record(this.module, {})
           this.$emit('save')
 
-          this.clearRecordSet()
-          this.$root.$emit('module-records-updated', {
-            moduleID: this.module.moduleID,
-          })
+          this.$root.$emit('module-records-updated', { moduleID })
         })
         .catch(this.toastErrorHandler(this.$t('notification:record.deleteBulkRecordUpdateFailed')))
         .finally(() => {
