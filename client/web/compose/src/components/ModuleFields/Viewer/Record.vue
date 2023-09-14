@@ -79,19 +79,17 @@ export default {
     value: {
       immediate: true,
       handler (value) {
-        this.relatedModuleID = undefined
         this.formatRecordValues(value)
       },
     },
   },
 
   beforeDestroy () {
-    this.setDefaultValues()
-    this.$root.$off('trigger-recordlist-refresh', this.refreshOnRelatedModuleUpdate)
+    this.destroyEvents()
   },
 
   mounted () {
-    this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedModuleUpdate)
+    this.$root.$on('module-records-updated', this.refreshOnRelatedModuleUpdate)
   },
 
   methods: {
@@ -211,6 +209,11 @@ export default {
       this.recordValues = {}
       this.relRecords = []
       this.relatedModuleID = undefined
+    },
+
+    destroyEvents () {
+      this.setDefaultValues()
+      this.$root.$off('module-records-updated', this.refreshOnRelatedModuleUpdate)
     },
   },
 }

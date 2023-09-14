@@ -1070,17 +1070,17 @@ export default {
         this.refresh(true)
       })
 
-      this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedRecordsUpdate)
+      this.$root.$on('module-records-updated', this.refreshOnRelatedRecordsUpdate)
     },
 
     refreshOnRelatedRecordsUpdate (module) {
-      const recordFields = this.recordListModule.fields.filter((f) => f.kind === 'Record')
+      const recordFields = this.fields.filter((f) => f.moduleField.kind === 'Record')
 
       if (this.recordListModule.moduleID === module.moduleID) {
         this.refresh(true)
       } else {
         const hasMatchingModule = recordFields.some((r) => {
-          return r.options.moduleID === module.moduleID
+          return r.moduleField.options.moduleID === module.moduleID
         })
 
         if (hasMatchingModule) {
@@ -1887,7 +1887,7 @@ export default {
       this.$root.$off(`refetch-non-record-blocks:${pageID}`, () => {
         this.refresh(true)
       })
-      this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedRecordsUpdate)
+      this.$root.$on('module-records-updated', this.refreshOnRelatedRecordsUpdate)
     },
 
     handleAddRecord () {

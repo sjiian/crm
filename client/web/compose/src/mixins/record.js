@@ -54,6 +54,7 @@ export default {
   methods: {
     ...mapActions({
       updatePrompts: 'wfPrompts/update',
+      clearRecordSet: 'record/clearSet',
     }),
 
     /**
@@ -319,8 +320,9 @@ export default {
           this.record = new compose.Record(this.module, {})
           this.$emit('save')
 
-          this.$root.$emit('trigger-recordlist-refresh', {
-            ...this.module,
+          this.clearRecordSet()
+          this.$root.$emit('module-records-updated', {
+            moduleID: this.module.moduleID,
           })
         })
         .catch(this.toastErrorHandler(this.$t('notification:record.deleteBulkRecordUpdateFailed')))

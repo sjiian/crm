@@ -38,20 +38,25 @@ export default function (ComposeAPI) {
       /**
        * Similar to fetchRecords but it only fetches unknown (not in set) ids
        */
-      async resolveRecords ({ commit, getters }, { namespaceID, moduleID, recordIDs }) {
+      async resolveRecords ({ commit, getters, state }, { namespaceID, moduleID, recordIDs }) {
         if (recordIDs.length === 0) {
           // save ourselves some work
           return
         }
 
+        console.log('state', state)
+        console.log('recordIDs before', recordIDs)
+
         // exclude existing & make unique
         const existing = new Set(getters.set.map(({ recordID }) => recordID))
-        recordIDs = [...new Set(recordIDs)]
+        recordIDs = [...new Set(recordIDs.filter(recordID => !existing.has(recordID)))]
 
         if (recordIDs.length === 0) {
           // Check for values again
           return
         }
+
+        console.log('recordIDs', recordIDs)
 
         const query = recordIDs.map(recordID => `recordID = ${recordID}`).join(' OR ')
 
@@ -73,6 +78,7 @@ export default function (ComposeAPI) {
       },
 
       clearSet ({ commit }) {
+        console.log('clearing set')
         commit(types.clearSet)
       },
     },
@@ -109,6 +115,7 @@ export default function (ComposeAPI) {
       [types.clearSet] (state) {
         state.pending = false
         state.set.splice(0)
+        console.log('state.set', state.set)
       },
     },
   }

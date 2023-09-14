@@ -56,7 +56,7 @@ export default {
 
     this.$root.$on('drill-down-chart', this.drillDown)
 
-    this.$root.$on('trigger-recordlist-refresh', this.refreshOnRelatedRecordsUpdate)
+    this.$root.$on('module-records-updated', this.refreshOnRelatedRecordsUpdate)
   },
 
   beforeDestroy () {
@@ -186,7 +186,7 @@ export default {
 
     destroyEvents () {
       this.$root.$off('drill-down-chart', this.drillDown)
-      this.$root.$off('trigger-recordlist-refresh', this.refreshOnRelatedRecordsUpdate)
+      this.$root.$off('module-records-updated', this.refreshOnRelatedRecordsUpdate)
     },
   },
 }
