@@ -38,7 +38,7 @@ export default function (ComposeAPI) {
       /**
        * Similar to fetchRecords but it only fetches unknown (not in set) ids
        */
-      async resolveRecords ({ commit, getters, state }, { namespaceID, moduleID, recordIDs }) {
+      async resolveRecords ({ commit, state }, { namespaceID, moduleID, recordIDs }) {
         if (recordIDs.length === 0) {
           // save ourselves some work
           return

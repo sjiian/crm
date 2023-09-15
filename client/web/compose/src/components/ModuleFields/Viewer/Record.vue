@@ -85,6 +85,7 @@ export default {
   },
 
   beforeDestroy () {
+    this.setDefaultValues()
     this.destroyEvents()
   },
 
@@ -212,7 +213,6 @@ export default {
     },
 
     destroyEvents () {
-      this.setDefaultValues()
       this.$root.$off('module-records-updated', this.refreshOnRelatedModuleUpdate)
     },
   },
