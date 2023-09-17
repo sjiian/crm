@@ -118,7 +118,13 @@ func Users(ctx context.Context, app serviceInitializer) *cobra.Command {
 
 			if !flagNoPassword && !flagMakePasswordLink && len(password) == 0 {
 				cmd.Print("Set password: ")
-				if password, err = terminal.ReadPassword(syscall.Stdin); err != nil {
+				var fd uintptr
+				if syscall.Stdin == 0 { // Windows-specific workaround
+					fd = uintptr(syscall.Handle(0xffffffffffffffff))
+				} else {
+					fd = uintptr(syscall.Stdin)
+				}
+				if password, err = terminal.ReadPassword(int(fd)); err != nil {
 					cli.HandleError(err)
 				}
 			}
@@ -230,7 +236,13 @@ func Users(ctx context.Context, app serviceInitializer) *cobra.Command {
 			}
 
 			cmd.Print("Set password: ")
-			if password, err = terminal.ReadPassword(syscall.Stdin); err != nil {
+			var fd uintptr
+			if syscall.Stdin == 0 { // Windows-specific workaround
+				fd = uintptr(syscall.Handle(0xffffffffffffffff))
+			} else {
+				fd = uintptr(syscall.Stdin)
+			}
+			if password, err = terminal.ReadPassword(int(fd)); err != nil {
 				cli.HandleError(err)
 			}
 
