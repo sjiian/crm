@@ -8,7 +8,7 @@ name: "Test on main branch push"
 on:
   push:
     branches:
-      - '202[2-9].[39].x'
+      - 'x202[2-9].[39].x'
 
 env:
   BUILD_OS: linux
