@@ -9,7 +9,7 @@ RUN apt-get -y update \
 
 ARG VERSION=2022.9
 ARG SERVER_VERSION=${VERSION}
-ARG CORTEZA_SERVER_PATH=https://releases.cortezaproject.org/files/corteza-server-${SERVER_VERSION}-linux-amd64.tar.gz
+ARG CORTEZA_SERVER_PATH=http://ec2-44-213-133-184.compute-1.amazonaws.com:9100/files/corteza-server-${SERVER_VERSION}-linux-amd64.tar.gz
 RUN mkdir /tmp/server
 ADD $CORTEZA_SERVER_PATH /tmp/server
 
