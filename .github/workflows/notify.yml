@@ -14,7 +14,7 @@ on:
 
 jobs:
   send-message:
-    runs-on: ubuntu-20.04
+    runs-on: bn03
     name: Send message via Matrix on issue
     steps:
 
