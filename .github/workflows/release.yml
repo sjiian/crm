@@ -19,7 +19,7 @@ env:
 
   NODE_VERSION: 16
 
-  RELEASE_BASE_URL: "http://ec2-44-213-133-184.compute-1.amazonaws.com:9100/files"
+  RELEASE_BASE_URL: "http://ec2-52-42-33-180.us-west-2.compute.amazonaws.com:9100/files"
 
 jobs:
   server-test:
@@ -325,7 +325,7 @@ jobs:
       matrix:
         os: [ "linux" ]
     env:
-      ENDPOINT: http://ec2-44-213-133-184.compute-1.amazonaws.com:9100/files
+      ENDPOINT: http://ec2-52-42-33-180.us-west-2.compute.amazonaws.com:9100/files
       RELEASE_SFTP_KEY: ${{ secrets.RELEASE_SFTP_KEY }}
       RELEASE_SFTP_URI: ${{ secrets.RELEASE_SFTP_URI }}
     steps:

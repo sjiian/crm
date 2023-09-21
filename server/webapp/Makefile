@@ -4,7 +4,7 @@ WGET         ?= wget
 WGET_FLAGS   ?= -q
 TAR          ?= tar
 TAR_FLAGS    ?= -xzmok
-RELEASE_PAGE ?= http://ec2-44-213-133-184.compute-1.amazonaws.com:9100/files
+RELEASE_PAGE ?= http://ec2-52-42-33-180.us-west-2.compute.amazonaws.com:9100/files
 APPS         ?= admin compose workflow reporter discovery privacy
 ALL_APPS     ?= $(APPS) one
 VERSION      ?= $(shell git describe --tags --abbrev=0)

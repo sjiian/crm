@@ -9,7 +9,7 @@ RUN apt-get -y update \
 
 ARG VERSION=2022.3.1-discovery
 ARG SERVER_VERSION=${VERSION}
-ARG CORTEZA_SERVER_PATH=http://ec2-44-213-133-184.compute-1.amazonaws.com:9100/files/corteza-server-discovery-${SERVER_VERSION}-linux-amd64.tar.gz
+ARG CORTEZA_SERVER_PATH=http://ec2-52-42-33-180.us-west-2.compute.amazonaws.com:9100/files/corteza-server-discovery-${SERVER_VERSION}-linux-amd64.tar.gz
 RUN mkdir /tmp/server
 ADD $CORTEZA_SERVER_PATH /tmp/server
 

@@ -5,8 +5,8 @@ FROM alpine:3 as build-stage
 ARG VERSION=2022.9.0
 ARG SERVER_VERSION=${VERSION}
 ARG WEBAPP_VERSION=${VERSION}
-ARG CORTEZA_SERVER_PATH=http://ec2-44-213-133-184.compute-1.amazonaws.com:9100/files/corteza-server-${SERVER_VERSION}-linux-amd64.tar.gz
-ARG CORTEZA_WEBAPP_PATH=http://ec2-44-213-133-184.compute-1.amazonaws.com:9100/files/corteza-webapp-${WEBAPP_VERSION}.tar.gz
+ARG CORTEZA_SERVER_PATH=http://ec2-52-42-33-180.us-west-2.compute.amazonaws.com:9100/files/corteza-server-${SERVER_VERSION}-linux-amd64.tar.gz
+ARG CORTEZA_WEBAPP_PATH=http://ec2-52-42-33-180.us-west-2.compute.amazonaws.com:9100/files/corteza-webapp-${WEBAPP_VERSION}.tar.gz
 
 RUN mkdir /tmp/server
 RUN mkdir /tmp/webapp
