@@ -97,7 +97,7 @@ jobs:
         run: cp *.md DCO LICENSE server/
       - name: "Copy language files"
         working-directory: server/pkg/locale
-        run: make src/en src/de src/fr
+        run: make src/en #src/de src/fr
       - name: "Build"
         working-directory: server
         run: make release-clean release
