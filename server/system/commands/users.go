@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"github.com/brianvoe/gofakeit/v6"
 	"strconv"
-	"syscall"
+	// "syscall"
+	"os"
 	"time"
 
 	"github.com/cortezaproject/corteza/server/pkg/auth"
@@ -118,7 +119,7 @@ func Users(ctx context.Context, app serviceInitializer) *cobra.Command {
 
 			if !flagNoPassword && !flagMakePasswordLink && len(password) == 0 {
 				cmd.Print("Set password: ")
-				if password, err = terminal.ReadPassword(syscall.Stdin); err != nil {
+				if password, err = terminal.ReadPassword(int(os.Stdin.Fd())); err != nil {
 					cli.HandleError(err)
 				}
 			}
@@ -230,7 +231,7 @@ func Users(ctx context.Context, app serviceInitializer) *cobra.Command {
 			}
 
 			cmd.Print("Set password: ")
-			if password, err = terminal.ReadPassword(syscall.Stdin); err != nil {
+			if password, err = terminal.ReadPassword(int(os.Stdin.Fd())); err != nil {
 				cli.HandleError(err)
 			}
 
